@@ -1,4 +1,4 @@
-# aprng boot最終課題 TODOアプリ
+# sprng boot最終課題 TODOアプリ
 - EclipseとJspring bootで作った、個人向けのシンプルなTODO管理ツールです。
 
 ## 🚀 主な機能
