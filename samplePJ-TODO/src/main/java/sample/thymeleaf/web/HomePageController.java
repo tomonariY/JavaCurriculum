@@ -7,6 +7,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HomePageController {
 	
+	
+	
 	@RequestMapping("/")
 	public ModelAndView top(ModelAndView mv) {
 				
