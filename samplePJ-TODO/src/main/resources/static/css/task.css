@@ -1,0 +1,271 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   【改修】PC1画面に収めるための全体コンテナ圧縮
+   ========================================================================== */
+.container {
+  max-width: 1250px;
+  width: 100%;
+  margin: 15px auto; /* 上下の余白を 40px -> 15px に大幅縮小 */
+  padding: 0 20px;
+  position: relative;
+}
+
+h1 {
+  font-size: 22px; /* 28px -> 22px にコンパクト化 */
+  margin-bottom: 12px; /* 余白を半分に */
+  color: var(--husky-dark);
+  position: relative;
+  padding-left: 12px;
+  line-height: 1.2;
+}
+
+/* タイトルの横にハスキーブルーのアクセント線をいれる小技 */
+h1::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 4px;
+  background-color: var(--husky-blue);
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   【改良】ログアウトボタン（右上配置・サイズ微調整）
+   ========================================================================== */
+.btn-logout {
+  position: absolute;
+  right: 20px;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px; /* ボタンを少しスマートに */
+  background-color: transparent;
+  color: var(--husky-gray);
+  border: 1px solid rgba(127, 140, 140, 0.4);
+  border-radius: 6px;
+  font-size: 12px; /* 13px -> 12px */
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-logout:hover {
+  background-color: var(--husky-dark);
+  color: var(--husky-white);
+  border-color: var(--husky-dark);
+  box-shadow: 0 3px 8px rgba(44, 62, 80, 0.1);
+  transform: translateY(-1px);
+}
+
+/* タスクがないときのメッセージボックス */
+.empty-message {
+  background-color: var(--husky-white);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  color: var(--husky-gray);
+  border: 1px dashed rgba(127, 140, 140, 0.4);
+  margin-top: 10px;
+}
+
+/* ==========================================================================
+   【改修】テーブル外枠の縦幅スリム化
+   ========================================================================== */
+.table-wrapper {
+  background-color: var(--husky-white);
+  border-radius: 8px;
+  overflow-x: auto;
+  display: block;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(44, 62, 80, 0.03);
+  border: 1px solid rgba(127, 140, 140, 0.15);
+  margin-bottom: 12px; /* 24px -> 12px に縮小 */
+  margin-top: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* テーブル本体のモダンデザイン */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px; /* 全体のベース文字サイズを 14px -> 13px にして情報量を凝縮 */
+  min-width: 950px;
+}
+
+/* 【改修】上下のパディングを 16px -> 10px に縮小して縦幅を大幅に節約 */
+th, td {
+  padding: 10px 12px; 
+  border-bottom: 1px solid rgba(127, 140, 140, 0.12);
+  vertical-align: middle;
+}
+
+/* 基本はすべての列を1行（改行なし） */
+td {
+  white-space: nowrap;
+}
+
+/* 2列目（タイトル）の設定 */
+td:nth-child(2), 
+th:nth-child(2) {
+  min-width: 160px;
+  white-space: normal;
+}
+
+/* ==========================================================================
+   【改修】3列目（内容）PCでの全表示とコンパクトさの両立
+   ========================================================================== */
+td:nth-child(3), 
+th:nth-child(3) {
+  width: auto;
+  min-width: 280px;
+  white-space: normal;  /* 長文はすべて自動で改行して全表示 */
+  word-break: break-all;
+  font-size: 12.5px !important; /* わずかに縮小 */
+  color: #555555 !important;
+  line-height: 1.4;     /* 行間を 1.5 -> 1.4 に詰めて縦幅を削減 */
+}
+
+/* ==========================================================================
+   作成日時/更新日時 と 開始日/終了日 のサイズ統一
+   ========================================================================== */
+td:nth-child(5), td:nth-child(6),
+td:nth-child(7), td:nth-child(8) {
+  font-size: 12.5px !important; /* 13px -> 12.5px にスマートに統一 */
+}
+
+/* テーブルのヘッダー */
+th {
+  background-color: var(--husky-dark);
+  color: var(--husky-white);
+  font-weight: 600;
+  white-space: nowrap;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+/* 行ホバー */
+tbody tr:hover {
+  background-color: rgba(127, 140, 140, 0.04);
+}
+
+/* 操作ボタン（編集・削除） */
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.btn-action {
+  padding: 4px 10px; /* ボタンの縦幅を少し薄く */
+  border-radius: 4px;
+  font-size: 11px; /* 12px -> 11px */
+  font-weight: 600;
+  color: var(--husky-white);
+  text-align: center;
+}
+
+.btn-edit { background-color: var(--husky-blue); }
+.btn-edit:hover { background-color: var(--husky-blue-hover); color: var(--husky-white); }
+
+.btn-delete { background-color: #e74c3c; }
+.btn-delete:hover { background-color: #c0392b; color: var(--husky-white); }
+
+/* ==========================================================================
+   【改修】ページネーションの間隔詰めの調整
+   ========================================================================== */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin: 15px 0; /* 35px -> 15px に縮小して高さを節約 */
+}
+
+/* 各ページリンクボタン */
+.page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px; /* 38px -> 32px に小型化 */
+  height: 32px;    /* 38px -> 32px に小型化 */
+  padding: 0 8px;
+  background-color: var(--husky-white);
+  border: 1px solid rgba(127, 140, 140, 0.25);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--husky-dark);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+a.page-link:hover {
+  background-color: var(--husky-light);
+  border-color: var(--husky-gray);
+  color: var(--husky-blue);
+  transform: translateY(-1px);
+}
+
+.page-link.active {
+  background-color: var(--husky-blue);
+  color: var(--husky-white);
+  border-color: var(--husky-blue);
+  box-shadow: 0 2px 6px rgba(52, 152, 218, 0.2);
+}
+
+/* ==========================================================================
+   【改修】新規作成ボタンのエリア調整
+   ========================================================================== */
+.footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -5px; /* 上に少し引き寄せる */
+}
+
+.btn-add {
+  padding: 8px 18px; /* 12px 24px -> 8px 18px でスマートに */
+  background-color: var(--husky-dark);
+  color: var(--husky-white);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(44, 62, 80, 0.1);
+}
+
+.btn-add:hover {
+  background-color: #1a252f;
+  color: var(--husky-white);
+}
+
+/* ユーティリティ */
+.text-center { text-align: center; }
+.font-bold { font-weight: 600; }
+.text-muted { color: var(--husky-gray); font-size: 11px; }
+
+/* ==========================================================================
+   【全体】スマホ対応（レスポンス対応）
+   ========================================================================== */
+@media (max-width: 768px) {
+  .container {
+    margin: 15px auto;
+    padding: 0 10px;
+  }
+  .btn-logout {
+    position: static;
+    display: block;
+    text-align: center;
+    margin-bottom: 12px;
+    width: 100%;
+  }
+  th, td {
+    padding: 10px 8px;
+  }
+  .action-buttons {
+    flex-direction: column;
+  }
+  td:nth-child(2), th:nth-child(2) { min-width: 140px; }
+  td:nth-child(3), th:nth-child(3) { min-width: 220px; }
+}

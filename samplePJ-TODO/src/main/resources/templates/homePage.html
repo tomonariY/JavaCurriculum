@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ホーム</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>タスク管理システム</h1>
+    <p class="welcome-text">ようこそ！ご利用にはログインが必要です。</p>
+    
+    <div class="auth-links">
+      <a th:href="@{/login}" class="btn-primary">ログインはこちら</a>
+      <a th:href="@{/registar}" class="btn-secondary">新規ユーザー登録</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

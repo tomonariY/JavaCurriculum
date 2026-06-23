@@ -1,0 +1,158 @@
+@charset "UTF-8";
+
+/* フォーム画面用の外枠 */
+.form-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px; /* 14インチ対応：外枠の余白を縮小 */
+}
+
+/* ==========================================================================
+   【改修】14インチPC1画面に収めるためのコンパクト設計
+   ========================================================================== */
+.form-card {
+  background-color: var(--husky-white);
+  padding: 20px 35px; /* 縦のパディングを 40px -> 20px に削減 */
+  width: 100%;
+  max-width: 550px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(44, 62, 80, 0.04);
+  border: 1px solid rgba(127, 140, 140, 0.15);
+}
+
+.form-card h1 {
+  font-size: 20px; /* サイズを少しコンパクトに */
+  margin-bottom: 15px; /* 余白を縮小 */
+  color: var(--husky-dark);
+  text-align: center;
+}
+
+/* 各入力項目の間隔を詰める */
+.form-group {
+  margin-bottom: 12px; /* 22px -> 12px に縮小 */
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px; /* 8px -> 4px に縮小 */
+  color: var(--husky-dark);
+}
+
+/* 入力欄のパディングを調整 */
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group textarea {
+  width: 100%;
+  padding: 8px 12px; /* 12px -> 8px にして縦幅を節約 */
+  border: 1px solid rgba(127, 140, 140, 0.3);
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: var(--husky-light);
+  color: var(--husky-dark);
+  font-family: inherit;
+}
+
+/* 内容欄（テキストエリア）の高さ圧縮 */
+.form-group textarea {
+  height: 65px; /* 120px -> 65px にして1画面に収まるよう調整 */
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--husky-blue);
+  background-color: var(--husky-white);
+  box-shadow: 0 0 0 3px rgba(52, 152, 218, 0.15);
+}
+
+/* ==========================================================================
+   【微修正】ID表示部分（新規作成時の空IDスマート非表示対策）
+   ========================================================================== */
+.row-id {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #f1f2f6;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+/* 新規作成画面（form-new.html）には hidden の id入力欄 が無いという構造の差を利用し、
+   安全に新規作成画面のときだけIDの行を自動非表示にする堅牢な手法 */
+.form-card form:not(:has(input[type="hidden"])) .row-id {
+  display: none !important;
+}
+
+/* 万が一の予備セーフティ（IDに中身が一切入っていない場合も非表示に） */
+.id-value:empty {
+  display: none;
+}
+
+.row-id label {
+  margin-bottom: 0;
+}
+
+.id-value {
+  font-weight: 700;
+  color: var(--husky-gray);
+}
+
+/* 下部ボタンエリア */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 15px;
+  border-top: 1px solid rgba(127, 140, 140, 0.15);
+  padding-top: 12px;
+}
+
+.btn-submit {
+  padding: 10px 20px;
+  background-color: var(--husky-blue);
+  color: var(--husky-white);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.btn-submit:hover {
+  background-color: var(--husky-blue-hover);
+}
+
+.btn-cancel {
+  padding: 10px 20px;
+  background-color: var(--husky-white);
+  color: var(--husky-gray);
+  border: 1px solid rgba(127, 140, 140, 0.5);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.btn-cancel:hover {
+  background-color: var(--husky-light);
+  color: var(--husky-dark);
+  border-color: var(--husky-gray);
+}
+
+/* ==========================================================================
+   【全体】スマホ対応（レスポンス対応）
+   ========================================================================== */
+@media (max-width: 480px) {
+  .form-card {
+    padding: 15px 20px;
+  }
+  .form-actions {
+    flex-direction: column; /* スマホではボタンを縦並びにして押しやすく */
+  }
+  .btn-submit, .btn-cancel {
+    width: 100%;
+  }
+}

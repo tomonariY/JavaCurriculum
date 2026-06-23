@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sample.common.dao.mapper.TaskMapper">
+
+    <select id="selectPage" resultType="sample.common.dao.entity.Task">
+		SELECT * FROM tasks
+		ORDER BY id DESC
+		LIMIT #{limit} OFFSET #{offset}
+    </select>
+    
+    <select id="countTotal" resultType="long">
+    	SELECT COUNT(*) FROM tasks
+	</select>
+    
+    <select id="findById" resultType="sample.common.dao.entity.Task">
+        SELECT * FROM tasks WHERE id = #{id}
+    </select>
+    
+    <select id="selectNextId" resultType="java.lang.Long">
+		SELECT COALESCE(MAX(id), 0) + 1 FROM tasks
+	</select>
+	
+    <insert id="insertTask" parameterType="sample.common.dao.entity.Task">
+		INSERT INTO tasks (
+		        title, 
+		        content, 
+		        name, 
+		        start_date, 
+		        end_date,
+		        username
+		    ) VALUES (
+		        #{title}, 
+		        #{content}, 
+		        #{name}, 
+		        #{startDate}, 
+		        #{endDate},
+		        #{username}
+		    )
+	</insert>
+	
+    <select id="updateTask" resultType="sample.common.dao.entity.Task">
+		UPDATE tasks
+		SET
+		    title = #{title},
+		    content = #{content},
+		    name = #{name},
+		    start_date = #{startDate},
+		    end_date = #{endDate},
+		    updated_at = NOW() 
+		WHERE id = #{id}
+	</select>
+	
+    <select id="deleteTask" resultType="sample.common.dao.entity.Task">
+		DELETE FROM tasks
+		WHERE id = #{id}
+	</select>
+
+</mapper>
