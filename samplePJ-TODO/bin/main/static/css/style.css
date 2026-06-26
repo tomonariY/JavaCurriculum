@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   ハスキー犬モチーフのカラー定義（モダン・スタイル）
+   ========================================================================== */
+:root {
+  --husky-dark: #2c3e50;       /* 毛並みのディープグレー（メインの文字・ヘッダー用） */
+  --husky-gray: #7f8c8d;       /* 優雅なグレー（サブ文字・ボーダー用） */
+  --husky-light: #f8f9fa;      /* 雪景色のライトグレー（全体の背景・見やすさ重視） */
+  --husky-white: #ffffff;      /* 純白（カードやフォームの背景用） */
+  --husky-blue: #3498db;       /* 神秘的な瞳のクールブルー（ボタン・アクセント用） */
+  --husky-blue-hover: #2980b9; /* ボタンにマウスを乗せた時の濃い青 */
+}
+
+/* 全体構造のリセットと基本設定 */
+* {
+  box-shadow: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  background-color: var(--husky-light);
+  color: var(--husky-dark);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   【改修】ホバー時の指マーク指定（全体共通）
+   ========================================================================== */
+a, 
+button, 
+input[type="submit"], 
+.page-item:not(.disabled) {
+  cursor: pointer; /* マウスホバー時に指マークにする */
+  transition: all 0.2s ease;
+}
+
+a {
+  color: var(--husky-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--husky-blue-hover);
+}
+
+button {
+  font-family: inherit;
+  border: none;
+}

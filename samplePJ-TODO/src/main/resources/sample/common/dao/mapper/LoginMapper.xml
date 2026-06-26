@@ -9,7 +9,7 @@
     
     <select id="findUser" resultType="sample.common.dao.entity.Login">
 		SELECT * FROM login
-		WHERE username = #{username} AND password = #{password}
+		WHERE username = #{username}
     </select>
     
     <select id="findByUsername" resultType="sample.common.dao.entity.Login">
