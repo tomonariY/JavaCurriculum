@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import sample.common.dao.entity.Login;
 import sample.common.dao.mapper.LoginMapper;
+import sample.common.logic.BusinessException;
 
 @Service
 public class LoginService {
@@ -17,7 +18,7 @@ public class LoginService {
         this.passwordEncoder = passwordEncoder;
     }
 	
-	public Login loginForm(String username, String password) throws Exception {
+	public Login loginForm(String username, String password) {
 		
 		Login user = loginMapper.findByUsername(username);
 		if (user == null || !passwordEncoder.matches(password, user.getPass())) {
@@ -30,7 +31,7 @@ public class LoginService {
 	
 	public void registarNewUser(String username, String password) {
         if (loginMapper.findByUsername(username) != null) {
-            throw new IllegalStateException("このユーザーは既に登録されています。");
+            throw new BusinessException("このユーザーは既に登録されています。");
         }
 		
 		Login user = new Login();		

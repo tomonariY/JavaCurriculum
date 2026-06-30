@@ -12,22 +12,21 @@ public interface TaskMapper {
 	// リスト取得用(Task編集時)
 	List<Task> findAllTasks();	
 	
-	// idを取得
-	Task findById (@Param("id") Long id);
 		
 	// 新規作成
 	Long selectNextId();
 	void insertTask(Task task);
-	
-	// 更新
-	void updateTask(Task task);
-	// 削除
-	void deleteTask(Long id);
-	
+		
 	// ページネーション
-	List<Task> selectPage(
-				@Param("limit") int limit,
-				@Param("offset") int offset
-			);
-	long countTotal();
+	List<Task> selectPageByUser(@Param("username") String username,
+								@Param("limit") int limit,
+								@Param("offset") int offset);
+	long countTotalByUser(@Param("username") String username);
+	// idを取得
+	Task findByIdAndUser (@Param("id") Long id, @Param("username") String username);
+	// 更新
+	int updateTaskByUser(Task task);
+	// 削除
+	int deleteTaskByUser(@Param("id") Long id, @Param("username") String username);
+
 }
