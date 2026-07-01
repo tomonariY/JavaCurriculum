@@ -9,8 +9,6 @@ import sample.common.dao.entity.Task;
 
 @Mapper
 public interface TaskMapper {
-	// リスト取得用(Task編集時)
-	List<Task> findAllTasks();	
 	
 	// idを取得
 	Task findById (@Param("id") Long id);

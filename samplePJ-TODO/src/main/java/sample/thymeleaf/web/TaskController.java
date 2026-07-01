@@ -67,7 +67,7 @@ public class TaskController {
 	}
 	
 	@RequestMapping(value = "/tasks/edit", method =  RequestMethod.POST)
-	public String updataTaskList(@ModelAttribute("taskForm") Task task) {
+	public String updateTaskList(@ModelAttribute("taskForm") Task task) {
 		
 		taskService.updateTask(task);
 		

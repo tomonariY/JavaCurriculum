@@ -19,7 +19,7 @@ public class LoginController {
 	
 	// ログイン
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView loginShoe(ModelAndView mv) {		
+	public ModelAndView loginShow(ModelAndView mv) {		
 		mv.setViewName("login");
 		return mv;
 	}
