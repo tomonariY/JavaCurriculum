@@ -41,14 +41,8 @@ public class TaskController {
 	
 	// 新規追加
 	@RequestMapping(value = "/tasks/new", method = RequestMethod.GET)
-	public ModelAndView newTaskList(ModelAndView mv) {
-		
-		Task newTask = new Task();
-		Long nextId = taskService.nextTaskId();
-		
-		newTask.setId(nextId);
-		
-		mv.addObject("taskForm", newTask);
+	public ModelAndView newTaskList(ModelAndView mv) {		
+		mv.addObject("taskForm", new Task());
 		mv.setViewName("tasks/form-new");
 		return mv;
 	}
