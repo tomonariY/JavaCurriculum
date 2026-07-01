@@ -24,18 +24,18 @@ public class LoginService {
 	}
 	
 	
-	public void registarNewUser(String username, String password) throws Exception {
+	public void registerNewUser(String username, String password) throws Exception {
 		
-		Login registarUser = loginMapper.findByUsername(username);
+		Login registerUser = loginMapper.findByUsername(username);
 		
-		if (registarUser != null) {
+		if (registerUser != null) {
 			throw new Exception("このユーザーは既に登録されています。");
 		}
 		
-		Login registar = new Login();	
-		registar.setUsername(username);
-		registar.setPass(password);
+		Login register = new Login();	
+		register.setUsername(username);
+		register.setPass(password);
 		
-		loginMapper.insertUser(registar);		
+		loginMapper.insertUser(register);		
 	}
 }

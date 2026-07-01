@@ -63,28 +63,28 @@ public class LoginController {
 	}
 	
 	// ユーザー登録
-	@RequestMapping(value = "/registar", method = RequestMethod.GET)
-	public ModelAndView registarShow(ModelAndView mv) {
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public ModelAndView registerShow(ModelAndView mv) {
 		
-		mv.setViewName("registar");
+		mv.setViewName("register");
 		return mv;
 	}
 	
-	@RequestMapping(value = "/registar", method = RequestMethod.POST)
-	public ModelAndView registarUser(
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public ModelAndView registerUser(
 			@RequestParam("username") String username,
 			@RequestParam("password") String password,
 			ModelAndView mv) {
 			
 			try {
 			
-				loginService.registarNewUser(username, password);
+				loginService.registerNewUser(username, password);
 				mv.setViewName("redirect:/login");
 				
 			} catch (Exception e) {
 				
 				mv.addObject("error", e.getMessage());
-				mv.setViewName("registar");
+				mv.setViewName("register");
 				
 			}
 			
