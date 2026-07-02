@@ -2,80 +2,54 @@ package sample.common.service;
 
 import java.util.List;
 
-import jakarta.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import sample.common.dao.entity.Login;
 import sample.common.dao.entity.Task;
 import sample.common.dao.mapper.TaskMapper;
 
 @Service
 public class TaskService {
-	@Autowired
-	private	TaskMapper taskMapper;
 	
-	// 新規追加
-	public Long nextTaskId() {
-		return taskMapper.selectNextId();
+	private final TaskMapper taskMapper;
+	
+	public TaskService(TaskMapper taskMapper) {
+		this.taskMapper = taskMapper;
 	}
 	
-	public void insertTask(HttpSession session, Task task) {
-		java.util.Enumeration<String> attributeNames = session.getAttributeNames();
-		
-		while (attributeNames.hasMoreElements()) {
-			String key = attributeNames.nextElement();
-			Object value = session.getAttribute(key);
-			
-			if (value instanceof Login) {
-				Login loginUser = (Login) value;
-				task.setUsername(loginUser.getUsername());
-				
-				break;
-			}
-			
-		}
-		
-		if (task.getUsername() == null) {
-			task.setUsername("unknown_user");
-		}
-		
+	// 新規追加
+	@Transactional
+	public void insertTask(Task task, String username) {
+		task.setUsername(username);
 		taskMapper.insertTask(task);
 	}
 	
-	// 編集＆更新
-	public Task getTaskById(Long id) {
-		return taskMapper.findById(id);
-	}
-	
-	public void updateTask(Task task) {
-		taskMapper.updateTask(task);
+	// 編集 ＆ 更新
+	@Transactional
+	public void updateTask(Task task, String username) {
+		task.setUsername(username);
+		taskMapper.updateTaskByUser(task);
 	}
 	
 	// 削除
-	public void deleteTask(Long id) {
-		taskMapper.deleteTask(id);
+	@Transactional
+	public void deleteTask(Long id, String username) {
+		taskMapper.deleteTaskByUser(id, username);
 	}
 	
 	// ページネーション
-	public List<Task> getTaskByPage(int page) {
-		int limit = 10;
-		int offset = (page - 1) * limit;
-		return taskMapper.selectPage(limit, offset);
+	private static final int PAGE_SIZE = 10;
+	
+	@Transactional(readOnly = true)
+	public List<Task> getTaskByPage(int page, String username) {
+		int offset = (page - 1) * PAGE_SIZE;
+		return taskMapper.selectPageByUser(username, PAGE_SIZE, offset);
 	}
 	
-	public int getTotalPages() {
-		long totalTasks = taskMapper.countTotal(); // データベースの総件数
-		int limit = 10;
-		
-		int totalPages = (int) ((totalTasks + limit - 1) / limit);
-		
-		if (totalPages == 0) {
-			totalPages = 1;
-		}
-		
-		return totalPages;
+	public int getTotalPages(String username) {
+		long total = taskMapper.countTotalByUser(username); // データベースの総件数
+		int pages = (int) ((total + PAGE_SIZE -1) / PAGE_SIZE);		
+		return Math.max(pages, 1);
 	}
 
 }
