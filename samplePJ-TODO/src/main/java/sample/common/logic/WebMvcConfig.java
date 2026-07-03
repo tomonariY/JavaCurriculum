@@ -13,7 +13,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		// TODO 自動生成されたメソッド・スタブ
+		// tasks 配下はログイン必須のため認証チェックを挟む
 		registry.addInterceptor(loginInterceptor)
 		
 			.addPathPatterns("/tasks/**");
