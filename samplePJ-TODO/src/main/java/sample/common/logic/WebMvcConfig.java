@@ -1,6 +1,5 @@
 package sample.common.logic;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -8,8 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 	
-	@Autowired
-	private LoginInterceptor loginInterceptor;
+	private final LoginInterceptor loginInterceptor;
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
