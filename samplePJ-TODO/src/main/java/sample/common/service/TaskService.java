@@ -2,69 +2,54 @@ package sample.common.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import sample.common.dao.entity.Task;
 import sample.common.dao.mapper.TaskMapper;
 
 @Service
 public class TaskService {
-	@Autowired
-	private	TaskMapper taskMapper;
 	
-	// 新規追加
-	public Long nextTaskId() {
-		return taskMapper.selectNextId();
+	private final TaskMapper taskMapper;
+	
+	public TaskService(TaskMapper taskMapper) {
+		this.taskMapper = taskMapper;
 	}
 	
-	public void insertTask(Task task) {	
+	// 新規追加
+	@Transactional
+	public void insertTask(Task task, String username) {
+		task.setUsername(username);
 		taskMapper.insertTask(task);
 	}
 	
-	// 編集＆更新
-	public Task getTaskById(Long id, String username) {
-		Task task = taskMapper.findByIdAndUser(id, username);
-		if (task == null) {
-			throw new IllegalStateException("対象のタスクが見つかりません。");
-		}
-		return task;
-	}
-	
+	// 編集 ＆ 更新
+	@Transactional
 	public void updateTask(Task task, String username) {
 		task.setUsername(username);
-		int updated = taskMapper.updateTaskByUser(task);
-		if (updated == 0) {
-			throw new IllegalStateException("更新対象のタスクが見つかりません。");
-		}
+		taskMapper.updateTaskByUser(task);
 	}
 	
 	// 削除
+	@Transactional
 	public void deleteTask(Long id, String username) {
-		int deleted = taskMapper.deleteTaskByUser(id, username);
-		if (deleted == 0) {
-			throw new IllegalStateException("削除対象のタスクが見つかりません。");
-		}
+		taskMapper.deleteTaskByUser(id, username);
 	}
 	
 	// ページネーション
+	private static final int PAGE_SIZE = 10;
+	
+	@Transactional(readOnly = true)
 	public List<Task> getTaskByPage(int page, String username) {
-		int limit = 10;
-		int offset = (page - 1) * limit;
-		return taskMapper.selectPageByUser(username, limit, offset);
+		int offset = (page - 1) * PAGE_SIZE;
+		return taskMapper.selectPageByUser(username, PAGE_SIZE, offset);
 	}
 	
 	public int getTotalPages(String username) {
-		long totalTasks = taskMapper.countTotalByUser(username); // データベースの総件数
-		int limit = 10;
-		
-		int totalPages = (int) ((totalTasks + limit - 1) / limit);
-		
-		if (totalPages == 0) {
-			totalPages = 1;
-		}
-		
-		return totalPages;
+		long total = taskMapper.countTotalByUser(username); // データベースの総件数
+		int pages = (int) ((total + PAGE_SIZE -1) / PAGE_SIZE);		
+		return Math.max(pages, 1);
 	}
 
 }
