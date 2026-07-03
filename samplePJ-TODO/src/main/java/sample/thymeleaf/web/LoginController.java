@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import sample.common.dao.entity.Login;
+import sample.common.logic.BusinessException;
 import sample.common.service.LoginService;
 
 @Controller
@@ -19,7 +20,7 @@ public class LoginController {
 	
 	// ログイン
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView loginShoe(ModelAndView mv) {		
+	public ModelAndView loginShow(ModelAndView mv) {		
 		mv.setViewName("login");
 		return mv;
 	}
@@ -44,7 +45,7 @@ public class LoginController {
 		
 			}
 			
-		} catch (Exception e) {
+		} catch (BusinessException e) {
 			mv.addObject("error", e.getMessage());
 			mv.setViewName("login");
 		
@@ -63,29 +64,24 @@ public class LoginController {
 	}
 	
 	// ユーザー登録
-	@RequestMapping(value = "/registar", method = RequestMethod.GET)
-	public ModelAndView registarShow(ModelAndView mv) {
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public ModelAndView registerShow(ModelAndView mv) {
 		
-		mv.setViewName("registar");
+		mv.setViewName("register");
 		return mv;
 	}
 	
 	@RequestMapping(value = "/registar", method = RequestMethod.POST)
-	public ModelAndView registarUser(
-			@RequestParam("username") String username,
-			@RequestParam("password") String password,
-			ModelAndView mv) {
-			
+	public ModelAndView registarUser(@RequestParam String username,
+									 @RequestParam String password,
+									 ModelAndView mv) {
 			try {
-			
 				loginService.registarNewUser(username, password);
 				mv.setViewName("redirect:/login");
 				
-			} catch (Exception e) {
-				
+			} catch (BusinessException e) {				
 				mv.addObject("error", e.getMessage());
-				mv.setViewName("registar");
-				
+				mv.setViewName("registar");			
 			}
 			
 			return mv;

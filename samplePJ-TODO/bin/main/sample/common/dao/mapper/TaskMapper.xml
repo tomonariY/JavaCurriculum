@@ -23,7 +23,7 @@
 		SELECT COALESCE(MAX(id), 0) + 1 FROM tasks
 	</select>
 	
-    <insert id="insertTask" parameterType="sample.common.dao.entity.Task" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertTask" parameterType="sample.common.dao.entity.Task">
 		INSERT INTO tasks (
 		        title, 
 		        content, 

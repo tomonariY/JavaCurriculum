@@ -12,24 +12,22 @@
     <div class="auth-card">
       <h1>ログイン</h1>
       
-	  <p th:if="${error}" th:text="${error}" class="error-text"></p> 
+	  <p th:if="${error}" th:text="${error}" style="color: red;"></p> 
       <form th:action="@{/login}" method="post">
         <div class="form-group">
-          <label for="username">ユーザー名</label>
-          <input type="text" id="username" name="username"
-		  		 th:value="${param.username}" placeholder="ユーザー名を入力" required>
+          <label>ユーザー名</label>
+          <input type="text" name="username" placeholder="ユーザー名を入力" required>
         </div>
         <div class="form-group">
-          <label for="password">パスワード</label>
-          <input type="password" id="password" name="password"
-		  		  placeholder="パスワードを入力" required>
+          <label>パスワード</label>
+          <input type="password" name="password" placeholder="パスワードを入力" required>
         </div>
         
         <button type="submit" class="btn-primary">ログイン</button>
       </form>
       
       <div class="auth-footer">
-        <a th:href="@{/register}">＞ 新規ユーザー登録はこちら</a>
+        <a th:href="@{/registar}">＞ 新規ユーザー登録はこちら</a>
       </div>
     </div>
   </div>

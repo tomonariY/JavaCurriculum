@@ -14,34 +14,34 @@
     <h1>タスク編集</h1>
     
     <div class="form-group row-id">
-      <label>タスクID</label>
+      <label for="id">タスクID</label>
       <span th:text="*{id}" class="id-value"></span>
     </div>
 
     <input type="hidden" th:field="*{id}">
 
     <div class="form-group">
-      <label>タイトル</label>
+      <label for="title">タイトル</label>
       <input type="text" th:field="*{title}" placeholder="タスクのタイトルを入力">
     </div>
     
     <div class="form-group">
-      <label>内容</label>
+      <label for="content">内容</label>
       <textarea th:field="*{content}" placeholder="タスクの詳細内容を入力"></textarea>
     </div>
     
     <div class="form-group">
-      <label>名前</label>
+      <label for="name">名前</label>
       <input type="text" th:field="*{name}" placeholder="登録者の名前を入力">
     </div>
     
     <div class="form-group">
-      <label>開始日</label>
+      <label for="startDate">開始日</label>
       <input type="date" th:field="*{startDate}">
     </div>
     
     <div class="form-group">
-      <label>終了日</label>
+      <label for="endDate">終了日</label>
       <input type="date" th:field="*{endDate}">
     </div>
     

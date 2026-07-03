@@ -2,7 +2,7 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>タスク新規作成</title>
+  <title>タスク編集</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <link rel="stylesheet" th:href="@{/css/form.css}">
 </head>
@@ -10,36 +10,43 @@
 
 <div class="form-container">
 <div class="form-card">
-  <form th:action="@{/tasks/new}" th:object="${taskForm}" method="post">
-    <h1>タスク新規作成</h1>
+  <form th:action="@{/tasks/edit}" th:object="${taskForm}" method="post">
+    <h1>タスク編集</h1>
     
+    <div class="form-group row-id">
+      <label>タスクID</label>
+      <span th:text="*{id}" class="id-value"></span>
+    </div>
+
+    <input type="hidden" th:field="*{id}">
+
     <div class="form-group">
-      <label for="title">タイトル</label>
+      <label>タイトル</label>
       <input type="text" th:field="*{title}" placeholder="タスクのタイトルを入力">
     </div>
     
     <div class="form-group">
-      <label for="content">内容</label>
+      <label>内容</label>
       <textarea th:field="*{content}" placeholder="タスクの詳細内容を入力"></textarea>
     </div>
     
     <div class="form-group">
-      <label for="name">名前</label>
+      <label>名前</label>
       <input type="text" th:field="*{name}" placeholder="登録者の名前を入力">
     </div>
     
     <div class="form-group">
-      <label for="startDate">開始日</label>
+      <label>開始日</label>
       <input type="date" th:field="*{startDate}">
     </div>
     
     <div class="form-group">
-      <label for="endDate">終了日</label>
+      <label>終了日</label>
       <input type="date" th:field="*{endDate}">
     </div>
     
     <div class="form-actions">
-      <button type="submit" class="btn-submit">追加する</button>
+      <button type="submit" class="btn-submit">更新する</button>
       <a th:href="@{/tasks}" class="btn-cancel">キャンセル</a>
     </div>
   </form>

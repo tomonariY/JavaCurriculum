@@ -10,7 +10,7 @@ public class Login {
 	  private LocalDateTime updatedAt;
 	
 	// Getter データの取得メソッド
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 	public String getUsername() {
