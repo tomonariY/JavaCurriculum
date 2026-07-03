@@ -1,0 +1,164 @@
+@charset "UTF-8";
+
+/* 画面の真ん中に要素を配置するレイアウト */
+.auth-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* 白ベースのすっきりしたモダンなカード */
+.auth-card {
+  background-color: var(--husky-white);
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(44, 62, 80, 0.05);
+  border: 1px solid rgba(127, 140, 140, 0.1);
+}
+
+.auth-card h1 {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--husky-dark);
+  font-weight: 700;
+}
+
+.welcome-text {
+  text-align: center;
+  color: var(--husky-gray);
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   【微修正】エラーメッセージの警告ボックス化
+   ========================================================================== */
+/* HTML側の「style="color: red;"」を確実に狙い撃ちし、モダンなエラー枠に変身させる */
+.auth-card p[style*="color: red"] {
+  color: #c0392b !important;           /* ハスキーの警告赤 */
+  background-color: #fdedec !important; /* 目に優しい薄い赤オレンジ背景 */
+  border: 1px solid #fadbd8 !important;
+  padding: 10px 14px !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  margin-bottom: 20px !important;
+  text-align: left !important;
+  display: block !important;
+}
+
+/* フォームの入力グループ */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--husky-dark);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(127, 140, 140, 0.3);
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: var(--husky-light);
+  color: var(--husky-dark);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--husky-blue);
+  background-color: var(--husky-white);
+  box-shadow: 0 0 0 3px rgba(52, 152, 218, 0.15);
+}
+
+/* ==========================================================================
+   【改修】③ 半角英数字の案内用テキスト
+   ========================================================================== */
+.input-help {
+  display: block;
+  font-size: 11px;
+  color: #e67e22; /* 注意を引きやすく、ハスキーブルーに合うオレンジ */
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* ボタンのスタイル（ハスキーの瞳ブルー） */
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: var(--husky-blue);
+  color: var(--husky-white);
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(52, 152, 218, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: var(--husky-blue-hover);
+  color: var(--husky-white);
+}
+
+.btn-secondary {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: var(--husky-white);
+  color: var(--husky-gray);
+  border: 1px solid var(--husky-gray);
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.btn-secondary:hover {
+  background-color: var(--husky-light);
+  color: var(--husky-dark);
+}
+
+.auth-links {
+  margin-top: 20px;
+}
+
+/* ==========================================================================
+   【微修正】フッターリンクのホバー演出
+   ========================================================================== */
+.auth-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.auth-footer a {
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.auth-footer a:hover {
+  background-color: rgba(52, 152, 218, 0.08); /* じんわりとハスキーブルーの影が浮き上がる */
+}
+
+/* ==========================================================================
+   【全体】スマホ対応（レスポンスデザイン）
+   ========================================================================== */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 25px 20px;
+  }
+}

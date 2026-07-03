@@ -1,41 +1,42 @@
 package sample.common.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import sample.common.dao.entity.Login;
 import sample.common.dao.mapper.LoginMapper;
+import sample.common.logic.BusinessException;
 
 @Service
 public class LoginService {
 
-	@Autowired
-	private LoginMapper loginMapper;
+	private final LoginMapper loginMapper;
+	private final PasswordEncoder passwordEncoder;
 	
-	public Login loginForm(String username, String password) throws Exception {
+    public LoginService(LoginMapper loginMapper, PasswordEncoder passwordEncoder) {
+        this.loginMapper = loginMapper;
+        this.passwordEncoder = passwordEncoder;
+    }
+	
+	public Login loginForm(String username, String password) {
 		
-		Login loginUser = loginMapper.findUser(username, password);
-		
-		if (loginUser == null) {
-			throw new Exception("このユーザーは登録されていません。");
+		Login user = loginMapper.findByUsername(username);
+		if (user == null || !passwordEncoder.matches(password, user.getPass())) {
+			return null;
 		}
 		
-		return loginUser;
+		return user;
 	}
 	
 	
-	public void registarNewUser(String username, String password) throws Exception {
+	public void registarNewUser(String username, String password) {
+        if (loginMapper.findByUsername(username) != null) {
+            throw new BusinessException("このユーザーは既に登録されています。");
+        }
 		
-		Login registarUser = loginMapper.findByUsername(username);
-		
-		if (registarUser != null) {
-			throw new Exception("このユーザーは既に登録されています。");
-		}
-		
-		Login registar = new Login();	
-		registar.setUsername(username);
-		registar.setPass(password);
-		
-		loginMapper.insertUser(registar);		
+		Login user = new Login();		
+		user.setUsername(username);
+		user.setPass(passwordEncoder.encode(password));
+		loginMapper.insertUser(user);		
 	}
 }
