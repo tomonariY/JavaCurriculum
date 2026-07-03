@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +19,8 @@ import sample.common.service.TaskService;
 
 @Controller
 public class TaskController {
-	@Autowired
-	private TaskService taskService;
+
+	private final TaskService taskService;
 	
 	// ホーム画面(Task)
 
