@@ -2,7 +2,24 @@
 .gradle
 
 # Ignore Gradle build output directory
-build
+build/
 
 # Ignore Kotlin plugin data
 .kotlin
+
+# Eclipse build output
+bin/
+
+# Eclipse
+.classpath
+.project
+.settings/
+.apt_generated/
+
+# IntelliJ
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
