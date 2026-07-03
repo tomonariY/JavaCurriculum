@@ -11,17 +11,17 @@ public class Task {
 	private String title;
 	private String content;
 	private String name;
+	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate startDate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate endDate;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	
 	private LocalDateTime createdAt;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDateTime updatedAt;
 
 	// Getter データの取得メソッド
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 	public String getUsername() {

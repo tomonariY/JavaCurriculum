@@ -20,7 +20,7 @@ public class LoginController {
 	
 	// ログイン
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView loginShoe(ModelAndView mv) {		
+	public ModelAndView loginShow(ModelAndView mv) {		
 		mv.setViewName("login");
 		return mv;
 	}
@@ -64,10 +64,10 @@ public class LoginController {
 	}
 	
 	// ユーザー登録
-	@RequestMapping(value = "/registar", method = RequestMethod.GET)
-	public ModelAndView registarShow(ModelAndView mv) {
+	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	public ModelAndView registerShow(ModelAndView mv) {
 		
-		mv.setViewName("registar");
+		mv.setViewName("register");
 		return mv;
 	}
 	

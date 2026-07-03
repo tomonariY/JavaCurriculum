@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +19,8 @@ import sample.common.service.TaskService;
 
 @Controller
 public class TaskController {
-	@Autowired
-	private TaskService taskService;
+
+	private final TaskService taskService;
 	
 	// ホーム画面(Task)
 
@@ -50,14 +49,8 @@ public class TaskController {
 	
 	// 新規追加
 	@RequestMapping(value = "/tasks/new", method = RequestMethod.GET)
-	public ModelAndView newTaskList(ModelAndView mv) {
-		
-		Task newTask = new Task();
-		Long nextId = taskService.nextTaskId();
-		
-		newTask.setId(nextId);
-		
-		mv.addObject("taskForm", newTask);
+	public ModelAndView newTaskList(ModelAndView mv) {		
+		mv.addObject("taskForm", new Task());
 		mv.setViewName("tasks/form-new");
 		return mv;
 	}
@@ -85,7 +78,7 @@ public class TaskController {
 	}
 	
 	@RequestMapping(value = "/tasks/edit", method =  RequestMethod.POST)
-	public String updataTaskList(@ModelAttribute("taskForm") Task task, HttpSession session) {
+	public String updateTaskList(@ModelAttribute("taskForm") Task task) {
 		
 		Login user = currentUser(session);
 		taskService.updateTask(task, user.getUsername());

@@ -54,3 +54,7 @@ button {
   font-family: inherit;
   border: none;
 }
+
+.error-text {
+    color: red;
+}
