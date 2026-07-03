@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import sample.common.dao.entity.Login;
+import sample.common.logic.BusinessException;
 import sample.common.service.LoginService;
 
 @Controller
@@ -44,7 +45,7 @@ public class LoginController {
 		
 			}
 			
-		} catch (Exception e) {
+		} catch (BusinessException e) {
 			mv.addObject("error", e.getMessage());
 			mv.setViewName("login");
 		
@@ -70,22 +71,17 @@ public class LoginController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ModelAndView registerUser(
-			@RequestParam("username") String username,
-			@RequestParam("password") String password,
-			ModelAndView mv) {
-			
+	@RequestMapping(value = "/registar", method = RequestMethod.POST)
+	public ModelAndView registarUser(@RequestParam String username,
+									 @RequestParam String password,
+									 ModelAndView mv) {
 			try {
-			
-				loginService.registerNewUser(username, password);
+				loginService.registarNewUser(username, password);
 				mv.setViewName("redirect:/login");
 				
-			} catch (Exception e) {
-				
+			} catch (BusinessException e) {				
 				mv.addObject("error", e.getMessage());
-				mv.setViewName("register");
-				
+				mv.setViewName("registar");			
 			}
 			
 			return mv;

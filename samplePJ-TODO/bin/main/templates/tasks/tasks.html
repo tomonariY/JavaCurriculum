@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>タスク一覧</title>
+  <link rel="stylesheet" th:href="@{../css/style.css}">
+  <link rel="stylesheet" th:href="@{../css/task.css}">
+</head>
+<body>
+
+<div class="container">
+  <h1>タスク一覧</h1>
+
+  <div th:if="${#lists.isEmpty(taskList)}" class="empty-message">
+    <p>現在タスクは登録されていません。「新規作成」から追加してください。</p>
+  </div>
+  
+  <a th:href="@{/logout}" class="btn-logout">ログアウト</a>
+
+  <div class="table-wrapper" th:if="${!#lists.isEmpty(taskList)}">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>タイトル</th>
+          <th>内容</th>
+          <th>登録者</th>
+          <th>開始日</th>
+          <th>終了日</th>
+          <th>作成日時</th>
+          <th>更新日時</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="task : ${taskList}">
+          <td th:text="${task.id}" class="text-center"></td>
+          <td th:text="${task.title}" class="font-bold"></td>
+          <td th:text="${task.content}"></td>
+          <td th:text="${task.name}"></td>
+          <td th:text="${task.startDate}" class="text-center"></td>
+          <td th:text="${task.endDate}" class="text-center"></td>
+          <td th:text="${task.createdAt != null ? #temporals.format(task.createdAt, 'yyyy/MM/dd') : '-'}" class="text-muted"></td>
+          <td th:text="${task.updatedAt != null ? #temporals.format(task.updatedAt, 'yyyy/MM/dd') : '-'}" class="text-muted"></td>
+          <td class="text-center">
+            <div class="action-buttons">
+              <a th:href="@{/tasks/edit/{id}(id=${task.id})}" class="btn-action btn-edit">編集</a>
+              <a th:href="@{/tasks/delete/{id}(id=${task.id})}" onclick="return confirm('本当に削除しますか？')" class="btn-action btn-delete">削除</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div th:if="${!#lists.isEmpty(taskList)}" class="pagination-container">
+    <a th:href="@{/tasks(page=${currentPage - 1})}" th:if="${currentPage > 1}" class="page-link">＜ 前</a>
+
+    <th:block th:each="i : ${#numbers.sequence(1, totalPages)}">
+      <span th:if="${i == currentPage}" th:text="${i}" class="page-link active"></span>    
+      <a th:href="@{/tasks(page=${i})}" th:if="${i != currentPage}" th:text="${i}" class="page-link"></a>
+    </th:block>
+
+    <a th:href="@{/tasks(page=${currentPage + 1})}" th:if="${currentPage < totalPages}" class="page-link">次 ＞</a>
+  </div>
+
+  <div class="footer-actions">
+    <a th:href="@{/tasks/new}" class="btn-add">＋ 新規作成</a>
+  </div>
+</div>
+
+</body>
+</html>
