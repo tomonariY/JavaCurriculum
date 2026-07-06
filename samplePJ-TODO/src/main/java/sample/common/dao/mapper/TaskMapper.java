@@ -21,7 +21,7 @@ public interface TaskMapper {
 								@Param("offset") int offset);
 	long countTotalByUser(@Param("username") String username);
 	// idを取得
-	Task findByIdAndUser (@Param("id") Long id, @Param("username") String username);
+	Task findByIdAndUser(@Param("id") Long id, @Param("username") String username);
 	// 更新
 	int updateTaskByUser(Task task);
 	// 削除

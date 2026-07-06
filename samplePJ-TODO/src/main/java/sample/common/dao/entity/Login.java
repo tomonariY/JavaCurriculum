@@ -16,7 +16,7 @@ public class Login {
 	public String getUsername() {
 		return username;
 	}
-	public String getPass() {
+	public String getPassword() {
 		return password;
 	}
 	public LocalDateTime getCreatedAt() {
@@ -33,7 +33,7 @@ public class Login {
 	public void setUsername(String username) {
 		this.username = username;
 	}	
-	public void setPass(String password) {
+	public void setPassword(String password) {
 		this.password = password;
-	}	
+	}
 }

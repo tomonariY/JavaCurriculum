@@ -2,7 +2,6 @@ package sample.thymeleaf.web;
 
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,8 +14,12 @@ import sample.common.service.LoginService;
 
 @Controller
 public class LoginController {
-	@Autowired	
-	private LoginService loginService;
+
+	private final LoginService loginService;
+	
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
+    }
 	
 	// ログイン
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -71,17 +74,17 @@ public class LoginController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/registar", method = RequestMethod.POST)
-	public ModelAndView registarUser(@RequestParam String username,
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public ModelAndView registerUser(@RequestParam String username,
 									 @RequestParam String password,
 									 ModelAndView mv) {
 			try {
-				loginService.registarNewUser(username, password);
+				loginService.registerNewUser(username, password);
 				mv.setViewName("redirect:/login");
 				
 			} catch (BusinessException e) {				
 				mv.addObject("error", e.getMessage());
-				mv.setViewName("registar");			
+				mv.setViewName("register");			
 			}
 			
 			return mv;

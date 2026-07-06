@@ -26,9 +26,21 @@ public class TaskService {
 	
 	// 編集 ＆ 更新
 	@Transactional
+	public Task getTaskById(Long id,String username) {
+		Task task = taskMapper.findByIdAndUser(id, username);
+		if (task == null) {
+			throw new IllegalStateException("対象のタスクが見つかりません。");
+		}
+		return task;
+	}
+	
+	@Transactional
 	public void updateTask(Task task, String username) {
 		task.setUsername(username);
-		taskMapper.updateTaskByUser(task);
+		int updated = taskMapper.updateTaskByUser(task);
+		if (updated == 0) {
+			throw new IllegalStateException("更新対象のタスクが見つかりません。");
+		}
 	}
 	
 	// 削除
@@ -42,7 +54,9 @@ public class TaskService {
 	
 	@Transactional(readOnly = true)
 	public List<Task> getTaskByPage(int page, String username) {
-		int offset = (page - 1) * PAGE_SIZE;
+		int totalPages = getTotalPages(username);
+		int safePage = Math.max(1, Math.min(page, totalPages));
+		int offset = (safePage - 1) * PAGE_SIZE;
 		return taskMapper.selectPageByUser(username, PAGE_SIZE, offset);
 	}
 	

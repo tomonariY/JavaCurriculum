@@ -14,7 +14,6 @@ public class Task {
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate startDate;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate endDate;
 	
 	private LocalDateTime createdAt;

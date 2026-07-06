@@ -9,12 +9,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-	private final WebMvcConfig webMvcConfig;
-
-	SecurityConfig(WebMvcConfig webMvcConfig) {
-		this.webMvcConfig = webMvcConfig;
-	}
-
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();

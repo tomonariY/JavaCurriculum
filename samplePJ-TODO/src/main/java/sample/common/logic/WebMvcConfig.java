@@ -9,11 +9,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	
 	private final LoginInterceptor loginInterceptor;
 	
+    public WebMvcConfig(LoginInterceptor loginInterceptor) {
+        this.loginInterceptor = loginInterceptor;
+    }
+	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		// tasks 配下はログイン必須のため認証チェックを挟む
-		registry.addInterceptor(loginInterceptor)
-		
-			.addPathPatterns("/tasks/**");
+		registry.addInterceptor(loginInterceptor)		
+				.addPathPatterns("/tasks/**");
 	}
 }
