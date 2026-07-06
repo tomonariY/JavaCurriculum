@@ -22,6 +22,10 @@ public class TaskController {
 
 	private final TaskService taskService;
 	
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
+	
 	// ホーム画面(Task)
 
 	@RequestMapping(value = "/tasks", method = RequestMethod.GET)
@@ -60,7 +64,7 @@ public class TaskController {
 		
 		Login user = currentUser(session);
 		task.setUsername(user.getUsername());
-		taskService.insertTask(task);
+		taskService.insertTask(task, user.getUsername());
 		
 		return "redirect:/tasks";
 	}
@@ -78,7 +82,7 @@ public class TaskController {
 	}
 	
 	@RequestMapping(value = "/tasks/edit", method =  RequestMethod.POST)
-	public String updateTaskList(@ModelAttribute("taskForm") Task task) {
+	public String updateTaskList(@ModelAttribute("taskForm") Task task, HttpSession session) {
 		
 		Login user = currentUser(session);
 		taskService.updateTask(task, user.getUsername());

@@ -14,13 +14,18 @@ public class LoginService {
 	private final LoginMapper loginMapper;
 	private final PasswordEncoder passwordEncoder;
 	
+    public LoginService(LoginMapper loginMapper, PasswordEncoder passwordEncoder) {
+        this.loginMapper = loginMapper;
+        this.passwordEncoder = passwordEncoder;
+    }
+    
+	
 	@Transactional(readOnly = true)
-	public Login loginForm(String username, String password) throws Exception {
-		
-		Login loginUser = loginMapper.findUser(username, password);
+	public Login loginForm(String username, String password) {
 		
 		Login user = loginMapper.findByUsername(username);
-		if (user == null || !passwordEncoder.matches(password, user.getPass())) {
+		
+		if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
 			return null;
 		}
 		
@@ -29,18 +34,14 @@ public class LoginService {
 	
 	
 	@Transactional
-	public void registarNewUser(String username, String password) {	
+	public void registerNewUser(String username, String password) {	
 		if (loginMapper.findByUsername(username) != null) {
 			throw new BusinessException("このユーザーは既に登録されています。");
 		}
 		
-		Login registar = new Login();	
-		registar.setUsername(username);
-		registar.setPass(password);
-		
 		Login user = new Login();		
 		user.setUsername(username);
-		user.setPass(passwordEncoder.encode(password));
+		user.setPassword(passwordEncoder.encode(password));
 		loginMapper.insertUser(user);		
 	}
 }
