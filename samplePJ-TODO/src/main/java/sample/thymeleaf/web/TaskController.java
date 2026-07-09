@@ -34,14 +34,14 @@ public class TaskController {
 	@RequestParam(value = "page", defaultValue = "1") int page,
 	HttpSession session,
 	ModelAndView mv) {
-		
+	
 	Login user = currentUser(session);
+	int safePage = taskService.clampPage(page, user.getUsername());
 	List<Task> taskList = taskService.getTaskByPage(page, user.getUsername());
-
 	int totalPages =taskService.getTotalPages(user.getUsername());
 
 	mv.addObject("taskList",taskList);
-	mv.addObject("currentPage", page);
+	mv.addObject("currentPage", safePage);
 	mv.addObject("totalPages", totalPages);
 	mv.setViewName("tasks/tasks");
 
