@@ -66,4 +66,8 @@ public class TaskService {
 		return Math.max(pages, 1);
 	}
 
+	public int clampPage(int page, String username) {
+		int totalPages = getTotalPages(username);
+		return Math.max(1, Math.min(page, totalPages));
+	}
 }
