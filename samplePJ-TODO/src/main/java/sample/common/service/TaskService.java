@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import sample.common.dao.entity.Task;
 import sample.common.dao.mapper.TaskMapper;
+import sample.common.logic.BusinessException;
 
 @Service
 public class TaskService {
@@ -29,7 +30,7 @@ public class TaskService {
 	public Task getTaskById(Long id,String username) {
 		Task task = taskMapper.findByIdAndUser(id, username);
 		if (task == null) {
-			throw new IllegalStateException("対象のタスクが見つかりません。");
+			throw new BusinessException("対象のタスクが見つかりません。");
 		}
 		return task;
 	}
@@ -39,7 +40,7 @@ public class TaskService {
 		task.setUsername(username);
 		int updated = taskMapper.updateTaskByUser(task);
 		if (updated == 0) {
-			throw new IllegalStateException("更新対象のタスクが見つかりません。");
+			throw new BusinessException("更新対象のタスクが見つかりません。");
 		}
 	}
 	
