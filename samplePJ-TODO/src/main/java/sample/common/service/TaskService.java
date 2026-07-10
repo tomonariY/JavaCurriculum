@@ -65,6 +65,7 @@ public class TaskService {
 		long total = taskMapper.countTotalByUser(username); // データベースの総件数
 		int pages = (int) ((total + PAGE_SIZE -1) / PAGE_SIZE);		
 		return Math.max(pages, 1);
+		
 	}
 
 }
