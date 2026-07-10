@@ -3,8 +3,6 @@ package sample.common.dao.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 public class Task {
 	private Long id;
 	private String username;
@@ -12,7 +10,6 @@ public class Task {
 	private String content;
 	private String name;
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate startDate;
 	private LocalDate endDate;
 	
