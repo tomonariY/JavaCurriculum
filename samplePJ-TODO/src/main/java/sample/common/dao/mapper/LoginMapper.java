@@ -8,17 +8,12 @@ import sample.common.dao.entity.Login;
 @Mapper
 public interface LoginMapper{
 	
-	 // ログイン用(ユーザー、パスワード)
-	Login findUser(
-			@Param("username") String username,
-			@Param("password") String password
-			);
-	
+	 // ログインのため username を取得する
 	Login findByUsername (
 			@Param("username") String username
 			);
 	
-	// ユーザー登録用
+	// ユーザー登録のため
 	void insertUser(Login login);
 	
 }

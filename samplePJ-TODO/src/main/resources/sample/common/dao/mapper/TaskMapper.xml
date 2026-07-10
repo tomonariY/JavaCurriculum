@@ -18,10 +18,6 @@
         SELECT * FROM tasks 
         WHERE id = #{id} AND username = #{username}
     </select>
-    
-    <select id="selectNextId" resultType="java.lang.Long">
-		SELECT COALESCE(MAX(id), 0) + 1 FROM tasks
-	</select>
 	
     <insert id="insertTask" parameterType="sample.common.dao.entity.Task" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tasks (
