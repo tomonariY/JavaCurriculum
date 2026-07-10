@@ -40,8 +40,8 @@
           <td th:text="${task.name}"></td>
           <td th:text="${task.startDate}" class="text-center"></td>
           <td th:text="${task.endDate}" class="text-center"></td>
-          <td th:text="${task.createdAt != null ? #temporals.format(task.createdAt, 'yyyy/MM/dd') : '-'}" class="text-muted"></td>
-          <td th:text="${task.updatedAt != null ? #temporals.format(task.updatedAt, 'yyyy/MM/dd') : '-'}" class="text-muted"></td>
+          <td th:text="${task.createdAt != null ? #temporals.format(task.createdAt, 'yyyy-MM-dd') : '-'}" class="text-muted"></td>
+          <td th:text="${task.updatedAt != null ? #temporals.format(task.updatedAt, 'yyyy-MM-dd') : '-'}" class="text-muted"></td>
           <td class="text-center">
             <div class="action-buttons">
               <a th:href="@{/tasks/edit/{id}(id=${task.id})}" class="btn-action btn-edit">編集</a>
