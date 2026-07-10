@@ -25,7 +25,7 @@ public class TaskService {
 	}
 	
 	// 編集 ＆ 更新
-	@Transactional
+	@Transactional(readOnly = true)
 	public Task getTaskById(Long id,String username) {
 		Task task = taskMapper.findByIdAndUser(id, username);
 		if (task == null) {
@@ -60,6 +60,7 @@ public class TaskService {
 		return taskMapper.selectPageByUser(username, PAGE_SIZE, offset);
 	}
 	
+	@Transactional(readOnly = true)
 	public int getTotalPages(String username) {
 		long total = taskMapper.countTotalByUser(username); // データベースの総件数
 		int pages = (int) ((total + PAGE_SIZE -1) / PAGE_SIZE);		
