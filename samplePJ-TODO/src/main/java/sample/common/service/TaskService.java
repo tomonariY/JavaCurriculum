@@ -69,6 +69,7 @@ public class TaskService {
 
 	}
 
+	@Transactional(readOnly = true)
 	public int clampPage(int page, String username) {
 		int totalPages = getTotalPages(username);
 		return Math.max(1, Math.min(page, totalPages));
