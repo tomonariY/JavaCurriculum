@@ -11,20 +11,19 @@ import sample.common.dao.entity.Task;
 public interface TaskMapper {
 	
 		
-	// 新規作成
-	Long selectNextId();
+	// 新規作成のため
 	void insertTask(Task task);
 		
-	// ページネーション
+	// ページネーションのため
 	List<Task> selectPageByUser(@Param("username") String username,
 								@Param("limit") int limit,
 								@Param("offset") int offset);
 	long countTotalByUser(@Param("username") String username);
-	// idを取得
+	// id取得のため
 	Task findByIdAndUser(@Param("id") Long id, @Param("username") String username);
-	// 更新
+	// 更新のため
 	int updateTaskByUser(Task task);
-	// 削除
+	// 削除のため
 	int deleteTaskByUser(@Param("id") Long id, @Param("username") String username);
 
 }
