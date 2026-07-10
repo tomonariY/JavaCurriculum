@@ -37,7 +37,7 @@ public class TaskController {
 	
 	Login user = currentUser(session);
 	int safePage = taskService.clampPage(page, user.getUsername());
-	List<Task> taskList = taskService.getTaskByPage(page, user.getUsername());
+	List<Task> taskList = taskService.getTaskByPage(safePage, user.getUsername());
 	int totalPages =taskService.getTotalPages(user.getUsername());
 
 	mv.addObject("taskList",taskList);
