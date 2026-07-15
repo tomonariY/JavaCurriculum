@@ -27,9 +27,7 @@ public class TaskController {
     }
 	
 	// ホーム画面(Task)
-
 	@RequestMapping(value = "/tasks", method = RequestMethod.GET)
-
 	public ModelAndView showTaskList(
 	@RequestParam(value = "page", defaultValue = "1") int page,
 	HttpSession session,

@@ -47,7 +47,10 @@ public class TaskService {
 	// 削除
 	@Transactional
 	public void deleteTask(Long id, String username) {
-		taskMapper.deleteTaskByUser(id, username);
+		int deleted = taskMapper.deleteTaskByUser(id, username);
+		if (deleted == 0) {
+			throw new BusinessException("削除対象のタスクが見つかりません。");
+		}
 	}
 	
 	// ページネーション
