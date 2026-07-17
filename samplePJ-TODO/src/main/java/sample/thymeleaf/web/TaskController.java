@@ -21,81 +21,79 @@ import sample.common.service.TaskService;
 public class TaskController {
 
 	private final TaskService taskService;
-	
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
-	
+
+	public TaskController(TaskService taskService) {
+		this.taskService = taskService;
+	}
+
 	// ホーム画面(Task)
 	@RequestMapping(value = "/tasks", method = RequestMethod.GET)
 	public ModelAndView showTaskList(
-	@RequestParam(value = "page", defaultValue = "1") int page,
-	HttpSession session,
-	ModelAndView mv) {
-	
-	Login user = currentUser(session);
-	int safePage = taskService.clampPage(page, user.getUsername());
-	List<Task> taskList = taskService.getTaskByPage(safePage, user.getUsername());
-	int totalPages =taskService.getTotalPages(user.getUsername());
+			@RequestParam(value = "page", defaultValue = "1") int page,
+			HttpSession session,
+			ModelAndView mv) {
 
-	mv.addObject("taskList",taskList);
-	mv.addObject("currentPage", safePage);
-	mv.addObject("totalPages", totalPages);
-	mv.setViewName("tasks/tasks");
+		Login user = currentUser(session);
+		int safePage = taskService.clampPage(page, user.getUsername());
+		List<Task> taskList = taskService.getTaskByPage(safePage, user.getUsername());
+		int totalPages = taskService.getTotalPages(user.getUsername());
 
-	return mv;
+		mv.addObject("taskList", taskList);
+		mv.addObject("currentPage", safePage);
+		mv.addObject("totalPages", totalPages);
+		mv.setViewName("tasks/tasks");
 
-	} 
+		return mv;
 
+	}
 
-	
 	// 新規追加
 	@RequestMapping(value = "/tasks/new", method = RequestMethod.GET)
-	public ModelAndView newTaskList(ModelAndView mv) {		
+	public ModelAndView newTaskList(ModelAndView mv) {
 		mv.addObject("taskForm", new Task());
 		mv.setViewName("tasks/form-new");
 		return mv;
 	}
-	
+
 	@RequestMapping(value = "/tasks/new", method = RequestMethod.POST)
 	public String insertTaskList(@ModelAttribute("taskForm") Task task, HttpSession session) {
-		
+
 		Login user = currentUser(session);
 		task.setUsername(user.getUsername());
 		taskService.insertTask(task, user.getUsername());
-		
+
 		return "redirect:/tasks";
 	}
-	
+
 	// 編集＆更新
 	@RequestMapping(value = "/tasks/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView editTaskList(@PathVariable("id") Long id, HttpSession session, ModelAndView mv) {
-		
+
 		Login user = currentUser(session);
 		Task targetTask = taskService.getTaskById(id, user.getUsername());
-		
+
 		mv.addObject("taskForm", targetTask);
 		mv.setViewName("tasks/form-edit");
 		return mv;
 	}
-	
-	@RequestMapping(value = "/tasks/edit", method =  RequestMethod.POST)
+
+	@RequestMapping(value = "/tasks/edit", method = RequestMethod.POST)
 	public String updateTaskList(@ModelAttribute("taskForm") Task task, HttpSession session) {
-		
+
 		Login user = currentUser(session);
 		taskService.updateTask(task, user.getUsername());
-		
+
 		return "redirect:/tasks";
 	}
-	
+
 	// 削除
 	@RequestMapping(value = "/tasks/delete/{id}")
 	public String deleteTaskList(@PathVariable("id") Long id, HttpSession session) {
 		Login user = currentUser(session);
-		taskService.deleteTask(id,user.getUsername());
+		taskService.deleteTask(id, user.getUsername());
 		return "redirect:/tasks";
 	}
-	
+
 	private Login currentUser(HttpSession session) {
 		Login user = (Login) session.getAttribute("loginUser");
 		if (user == null) {
