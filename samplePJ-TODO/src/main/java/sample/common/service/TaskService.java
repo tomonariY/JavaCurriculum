@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -107,7 +109,9 @@ public class TaskService {
 		}
 		return task;
 	}
-
+	
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	
 	public byte[] convertTasksToCsv(List<Task> tasks) {
 		String[] header = { "ID", "ユーザー名", "タイトル", "内容", "登録者", "開始日", "終了日", "作成日時", "更新日" };
 
@@ -128,8 +132,8 @@ public class TaskService {
 							task.getName(),
 							String.valueOf(task.getStartDate()),
 							String.valueOf(task.getEndDate()),
-							String.valueOf(task.getCreatedAt()),
-							String.valueOf(task.getUpdatedAt())
+							formatDateTime(task.getCreatedAt()),
+							formatDateTime(task.getUpdatedAt())
 					};
 					csvWriter.writeNext(row);
 				}
@@ -140,5 +144,9 @@ public class TaskService {
 			throw new BusinessException("CSV出力処理でエラーが発生しました。");
 		}
 
+	}
+	
+	private String formatDateTime(LocalDateTime dateTime) {
+		return dateTime != null ? dateTime.format(DATE_TIME_FORMATTER) : "";
 	}
 }

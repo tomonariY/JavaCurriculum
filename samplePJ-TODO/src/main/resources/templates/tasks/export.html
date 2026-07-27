@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>CSV出力</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" th:href="@{/css/form.css}">
+</head>
+<body>
+
+<div class="form-container">
+<div class="form-card">
+  <form th:action="@{/tasks/export}" method="post">
+    <h1>CSV出力</h1>
+
+    <div th:if="${error}" class="error-message">
+      <span th:text="${error}"></span>
+    </div>
+
+    <p class="input-help">出力したい期間を指定してください</p>
+
+    <div class="form-group">
+      <label for="startDate">開始日</label>
+      <input value="${startDate}" type="date" id="startDate" name="startDate">
+    </div>
+
+    <div class="form-group">
+      <label for="endDate">終了日</label>
+      <input th:value="${endDate}" type="date" id="endDate" name="endDate">
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">CSV出力する</button>
+      <a th:href="@{/tasks}" class="btn-cancel">キャンセル</a>
+    </div>
+  </form>
+</div>
+</div>
+
+</body>
+</html>

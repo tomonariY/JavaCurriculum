@@ -1,9 +1,12 @@
 package sample.thymeleaf.web;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -67,6 +70,59 @@ class TaskControllerTest {
 				.andExpect(status().is3xxRedirection())
 				.andExpect(redirectedUrl("/tasks"))
 				.andExpect(flash().attribute("error", "対象のタスクが見つかりません。"));
+	}
+
+	// ===== export =====
+	@Test // 正常系
+	void csvエクスポート_期間指定で正しくCSVがダウンロードされる() throws Exception {
+		// given
+		when(taskService.exportTasksByPeriod(
+				eq("alice"), any(LocalDate.class), any(LocalDate.class)))
+						.thenReturn(List.of());
+		when(taskService.convertTasksToCsv(anyList()))
+				.thenReturn("dummy csv content".getBytes(StandardCharsets.UTF_8));
+
+		// when / then
+		mockMvc.perform(post("/tasks/export")
+				.session(session)
+				.param("startDate", "2026-01-01")
+				.param("endDate", "2026-01-31"))
+				.andExpect(status().isOk())
+				.andExpect(header().string("Content-Type", "text/csv; charset=UTF-8"))
+				.andExpect(header().string("Content-Disposition", "attachment; filename=\"tasks_export.csv\""))
+				.andExpect(content().bytes("dummy csv content".getBytes(StandardCharsets.UTF_8)));
+
+	}
+
+	@Test // 異常系
+	void csvエクスポート_日付未入力なら同じ画面にエラーが表示される() throws Exception {
+		// given
+
+		// when / then
+		mockMvc.perform(post("/tasks/export")
+				.session(session))
+				.andExpect(status().isOk())
+				.andExpect(view().name("tasks/export"))
+				.andExpect(model().attribute("error", "出力条件を指定してください。"));
+
+	}
+
+	@Test // 異常系
+	void csvエクスポート_0件ならBusinessExceptionが表示される() throws Exception {
+		// given
+		when(taskService.exportTasksByPeriod(
+				eq("alice"), any(LocalDate.class), any(LocalDate.class)))
+						.thenThrow(new BusinessException("出力件数は0件です。"));
+
+		// when / then
+		mockMvc.perform(post("/tasks/export")
+				.session(session)
+				.param("startDate", "2026-01-01")
+				.param("endDate", "2026-01-31"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("tasks/export"))
+				.andExpect(model().attribute("error", "出力件数は0件です。"));
+
 	}
 
 }
