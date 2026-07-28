@@ -31,7 +31,7 @@ body {
 }
 
 /* ==========================================================================
-   【改修】ホバー時の指マーク指定（全体共通）
+   ホバー時の指マーク指定（全体共通）
    ========================================================================== */
 a, 
 button, 
@@ -57,4 +57,15 @@ button {
 
 .error-text {
     color: red;
+}
+
+.error-message {
+  background-color: #fdedec;
+  color: #c0392b;
+  border: 1px solid #fadbd8;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 12px;
 }
