@@ -71,6 +71,15 @@ class TaskControllerTest {
 				.andExpect(redirectedUrl("/tasks"))
 				.andExpect(flash().attribute("error", "対象のタスクが見つかりません。"));
 	}
+	
+	// ===== redirectToRoot =====
+	@Test // 正常系
+	void redirectToRoot_redirectsToLiveTasksPage() throws Exception {
+		// when / then: "/" へのGETリクエストで "/tasks/live" へリダイレクトされることを確認
+		mockMvc.perform(get("/"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/tasks/live"));
+	}
 
 	// ===== export =====
 	@Test // 正常系

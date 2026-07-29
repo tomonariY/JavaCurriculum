@@ -40,7 +40,7 @@ public class LoginController {
 			
 			if (user != null) {
 				session.setAttribute("loginUser", user);
-				mv.setViewName("redirect:/tasks");
+				mv.setViewName("redirect:/tasks/live");
 				
 			} else {
 				mv.addObject("error", "ユーザー名またはパスワードが間違っています。");

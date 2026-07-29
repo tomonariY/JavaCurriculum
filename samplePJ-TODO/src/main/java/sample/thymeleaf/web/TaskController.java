@@ -51,6 +51,19 @@ public class TaskController {
 
 	}
 
+	// ホーム画面(Task) API実装
+	@RequestMapping(value = "/tasks/live", method = RequestMethod.GET)
+	public ModelAndView showApiTaskList(ModelAndView mv) {
+		mv.setViewName("tasks/live");
+		return mv;
+	}
+	
+	// ルートURL(/) は API版の一覧画面へリダイレクト
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String redirectToRoot() {
+	    return "redirect:/tasks/live";
+	}
+
 	// 新規追加
 	@RequestMapping(value = "/tasks/new", method = RequestMethod.GET)
 	public ModelAndView newTaskList(ModelAndView mv) {
@@ -105,14 +118,14 @@ public class TaskController {
 		}
 		return user;
 	}
-	
+
 	// CSVエクスポート - 入力画面表示
 	@RequestMapping(value = "/tasks/export", method = RequestMethod.GET)
 	public ModelAndView showExport(ModelAndView mv) {
 		mv.setViewName("tasks/export");
 		return mv;
 	}
-	
+
 	@RequestMapping(value = "/tasks/export", method = RequestMethod.POST)
 	public ModelAndView export(
 			@RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
@@ -120,7 +133,7 @@ public class TaskController {
 			HttpSession session,
 			HttpServletResponse response,
 			ModelAndView mv) throws IOException {
-		
+
 		Login user = currentUser(session);
 
 		try {
@@ -128,14 +141,14 @@ public class TaskController {
 				throw new BusinessException("出力条件を指定してください。");
 			}
 			List<Task> tasks = taskService.exportTasksByPeriod(user.getUsername(), startDate, endDate);
-			
+
 			byte[] csv = taskService.convertTasksToCsv(tasks);
 			response.setContentType("text/csv; charset=UTF-8");
 			response.setHeader("Content-Disposition", "attachment; filename=\"tasks_export.csv\"");
 			response.getOutputStream().write(csv);
 			response.getOutputStream().flush();
 			return null;
-			
+
 		} catch (BusinessException e) {
 			mv.addObject("error", e.getMessage());
 			mv.addObject("startDate", startDate);
@@ -143,6 +156,6 @@ public class TaskController {
 			mv.setViewName("tasks/export");
 			return mv;
 		}
-		
+
 	}
 }
