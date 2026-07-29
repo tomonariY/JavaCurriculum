@@ -57,12 +57,6 @@ public class TaskController {
 		mv.setViewName("tasks/live");
 		return mv;
 	}
-	
-	// ルートURL(/) は API版の一覧画面へリダイレクト
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String redirectToRoot() {
-	    return "redirect:/tasks/live";
-	}
 
 	// 新規追加
 	@RequestMapping(value = "/tasks/new", method = RequestMethod.GET)
