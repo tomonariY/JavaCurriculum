@@ -46,7 +46,7 @@ public class LoginControllerTest {
 				.param("username", "alice")
 				.param("password", "正しいパスワード"))
 				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/tasks"));
+				.andExpect(redirectedUrl("/tasks/live"));
 
 	}
 
