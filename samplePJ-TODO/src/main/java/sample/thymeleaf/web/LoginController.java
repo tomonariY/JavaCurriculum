@@ -75,8 +75,8 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ModelAndView registerUser(@RequestParam String username,
-									 @RequestParam String password,
+	public ModelAndView registerUser(@RequestParam("username") String username,
+									 @RequestParam("password") String password,
 									 ModelAndView mv) {
 			try {
 				loginService.registerNewUser(username, password);

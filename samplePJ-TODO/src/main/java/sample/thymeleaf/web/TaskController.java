@@ -34,9 +34,15 @@ public class TaskController {
 	@RequestMapping(value = "/tasks", method = RequestMethod.GET)
 	public ModelAndView showTaskList(
 			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "from", required = false) String from,
 			HttpSession session,
 			ModelAndView mv) {
-
+		
+		if ("live".equals(from)) {
+			mv.setViewName("redirect:/tasks/live");
+			return mv;
+		}
+		
 		Login user = currentUser(session);
 		int safePage = taskService.clampPage(page, user.getUsername());
 		List<Task> taskList = taskService.getTaskByPage(safePage, user.getUsername());
@@ -60,40 +66,61 @@ public class TaskController {
 
 	// 新規追加
 	@RequestMapping(value = "/tasks/new", method = RequestMethod.GET)
-	public ModelAndView newTaskList(ModelAndView mv) {
+	public ModelAndView newTaskList(
+		@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
+		ModelAndView mv) {
 		mv.addObject("taskForm", new Task());
+		mv.addObject("from", from);
 		mv.setViewName("tasks/form-new");
 		return mv;
 	}
 
 	@RequestMapping(value = "/tasks/new", method = RequestMethod.POST)
-	public String insertTaskList(@ModelAttribute("taskForm") Task task, HttpSession session) {
+	public String insertTaskList(
+		@ModelAttribute("taskForm") Task task, 
+		@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
+		HttpSession session) {
 
 		Login user = currentUser(session);
 		task.setUsername(user.getUsername());
 		taskService.insertTask(task, user.getUsername());
+
+		if ("live".equals(from)) {
+			return "redirect:/tasks/live";
+		}
 
 		return "redirect:/tasks";
 	}
 
 	// 編集＆更新
 	@RequestMapping(value = "/tasks/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editTaskList(@PathVariable("id") Long id, HttpSession session, ModelAndView mv) {
+	public ModelAndView editTaskList(
+			@PathVariable("id") Long id,
+			@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
+			HttpSession session, ModelAndView mv) {
 
 		Login user = currentUser(session);
 		Task targetTask = taskService.getTaskById(id, user.getUsername());
 
 		mv.addObject("taskForm", targetTask);
+		mv.addObject("from", from);
 		mv.setViewName("tasks/form-edit");
 		return mv;
 	}
 
 	@RequestMapping(value = "/tasks/edit", method = RequestMethod.POST)
-	public String updateTaskList(@ModelAttribute("taskForm") Task task, HttpSession session) {
+	public String updateTaskList(
+			@ModelAttribute("taskForm") Task task,
+			@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
+			HttpSession session) {
 
 		Login user = currentUser(session);
 		taskService.updateTask(task, user.getUsername());
-
+		
+		if ("live".equals(from)) {
+			return "redirect:/tasks/live";
+		}
+		
 		return "redirect:/tasks";
 	}
 
@@ -124,6 +151,7 @@ public class TaskController {
 	public ModelAndView export(
 			@RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
 			@RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+			@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
 			HttpSession session,
 			HttpServletResponse response,
 			ModelAndView mv) throws IOException {
@@ -147,6 +175,7 @@ public class TaskController {
 			mv.addObject("error", e.getMessage());
 			mv.addObject("startDate", startDate);
 			mv.addObject("endDate", endDate);
+			mv.addObject("from", from);
 			mv.setViewName("tasks/export");
 			return mv;
 		}

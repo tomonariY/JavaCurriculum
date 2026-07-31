@@ -41,7 +41,7 @@ h1::before {
 .btn-logout {
 	position: absolute;
 	right: 20px;
-	top: 0;
+	top: 18px;
 	display: inline-flex;
 	align-items: center;
 	padding: 6px 12px;
@@ -76,7 +76,7 @@ h1::before {
 }
 
 /* ==========================================================================
-   【改修】テーブル外枠の縦幅スリム化
+   テーブル外枠の縦幅スリム化
    ========================================================================== */
 .table-wrapper {
 	background-color: var(--husky-white);
@@ -123,7 +123,7 @@ th:nth-child(2) {
 }
 
 /* ==========================================================================
-   【改修】3列目（内容）PCでの全表示とコンパクトさの両立
+   	3列目（内容）PCでの全表示とコンパクトさの両立
    ========================================================================== */
 td:nth-child(3),
 th:nth-child(3) {
@@ -202,7 +202,7 @@ tbody tr:hover {
 }
 
 /* ==========================================================================
-   【改修】ページネーションの間隔詰めの調整
+   ページネーションの間隔詰めの調整
    ========================================================================== */
 .pagination-container {
 	display: flex;
@@ -255,6 +255,10 @@ a.page-link:hover {
 	justify-content: flex-end;
 	gap: 10px;
 	margin-top: -5px;
+}
+
+.btn-wrapper {
+	margin-bottom: 15px;
 }
 
 .btn-add {
@@ -312,11 +316,10 @@ a.page-link:hover {
 	}
 
 	.btn-logout {
-		position: static;
-		display: block;
-		text-align: center;
-		margin-bottom: 12px;
-		width: 100%;
+		position: absolute;
+		top: 18px;
+		right: 10px;
+		width: auto;
 	}
 
 	th,
