@@ -13,6 +13,8 @@
   <form th:action="@{/tasks/new}" th:object="${taskForm}" method="post">
     <h1>タスク新規作成</h1>
     
+    <input type="hidden" name="from" th:value="${from}">
+
     <div class="form-group">
       <label for="title">タイトル</label>
       <input type="text" th:field="*{title}" placeholder="タスクのタイトルを入力">
@@ -40,7 +42,7 @@
     
     <div class="form-actions">
       <button type="submit" class="btn-submit">追加する</button>
-      <a th:href="@{/tasks}" class="btn-cancel">キャンセル</a>
+      <a th:href="@{/tasks(from=${from})}" class="btn-cancel">キャンセル</a>
     </div>
   </form>
 </div>

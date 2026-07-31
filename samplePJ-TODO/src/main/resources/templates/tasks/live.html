@@ -2,119 +2,171 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <title>タスク一覧（API版）</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}">
-  <link rel="stylesheet" th:href="@{/css/task.css}">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>タスク一覧（API版）</title>
+	<!-- Spring Boot 起動用 CSS -->
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" th:href="@{/css/task.css}">
+	<!-- ローカル用 CSS -->
+	<link rel="stylesheet" href="../../static/css/style.css">
+	<link rel="stylesheet" href="../../static/css/task.css">
 </head>
 
 <body>
 
-  <div class="container">
-    <h1>タスク一覧（API版）</h1>
+	<div class="container">
+		<h1>タスク一覧（API版）</h1>
 
-    <p><a th:href="@{/tasks}">← 編集・削除はこちらの通常画面から</a></p>
-    <p>
-      <a th:href="@{/tasks/new}">+ 新規作成</a>
-      <a th:href="@{/tasks/export}">CSV出力</a>
-    </p>
+		<!--  <p><a th:href="@{/tasks}">← 編集・削除はこちらの通常画面から</a></p>-->
+		<p class="btn-wrapper">
+			<a th:href="@{/tasks/new(from='live')}" class="btn-add">+ 新規作成</a>
+			<a th:href="@{/tasks/export}" class="btn-export">CSV出力</a>
+		</p>
 
-    <div id="loading" class="empty-message">読み込み中...</div>
-    <div id="error-area" class="error-message" style="display:none;"></div>
+		<div id="loading" class="empty-message">読み込み中...</div>
+		<div id="error-area" class="error-message" style="display:none;"></div>
+		<div id="empty-area" class="empty-message" style="display:none;"></div>
 
-    <div id="table-wrapper" class="table-wrapper" style="display:none;">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>タイトル</th>
-            <th>内容</th>
-            <th>登録者</th>
-            <th>開始日</th>
-            <th>終了日</th>
-            <th>作成日時</th>
-            <th>更新日時</th>
-          </tr>
-        </thead>
-        <tbody id="task-table-body"></tbody>
-      </table>
-    </div>
+		<div id="table-wrapper" class="table-wrapper" style="display:none;">
+			<table>
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>タイトル</th>
+						<th>内容</th>
+						<th>登録者</th>
+						<th>開始日</th>
+						<th>終了日</th>
+						<th>作成日時</th>
+						<th>更新日時</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="task-table-body"></tbody>
+			</table>
+		</div>
 
-    <div id="pagination" class="pagination-container" style="display:none;">
-      <button id="prev-page" class="page-link">＜ 前</button>
-      <span id="page-info" class="page-link active"></span>
-      <button id="next-page" class="page-link">次 ＞</button>
-    </div>
-  </div>
+		<a th:href="@{/logout}" class="btn-logout">ログアウト</a>
 
-  <script>
-    let currentPage = 1;
+		<div id="pagination" class="pagination-container" style="display:none;">
+			<button id="prev-page" class="page-link">＜ 前</button>
+			<span id="page-info" class="page-link active"></span>
+			<button id="next-page" class="page-link">次 ＞</button>
+		</div>
+	</div>
 
-    function formatDateTime(isoString) {
-      if (!isoString) return '';
-      return isoString.substring(0, 10);
-    }
+	<script>
+		let currentPage = 1;
 
-    function loadTasks(page) {
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('error-area').style.display = 'none';
-      document.getElementById('table-wrapper').style.display = 'none';
-      document.getElementById('pagination').style.display = 'none';
+		function formatDateTime(isoString) {
+			if (!isoString) return '';
+			return isoString.substring(0, 10);
+		}
 
-      fetch('/api/tasks?page=' + page)
-        .then(function (response) {
-          if (!response.ok) {
-            throw new Error('サーバーからの応答が正常ではありません(ステータス:' + response.status + ')');
-          }
-          return response.json();
-        })
-        .then(function (data) {
-          const tbody = document.getElementById('task-table-body');
-          tbody.innerHTML = '';
+		function loadTasks(page) {
+			document.getElementById
+			document.getElementById('error-area').style.display = 'none';
+			document.getElementById('table-wrapper').style.display = 'none';
+			document.getElementById('pagination').style.display = 'none';
 
-          data.tasks.forEach(function (task) {
-            const tr = document.createElement('tr');
-            tr.innerHTML =
-              '<td class="text-center">' + task.id + '</td>' +
-              '<td class="font-bold">' + task.title + '</td>' +
-              '<td>' + (task.content || '') + '</td>' +
-              '<td>' + (task.name || '') + '</td>' +
-              '<td class="text-center">' + formatDateTime(task.startDate) + '</td>' +
-              '<td class="text-center">' + formatDateTime(task.endDate) + '</td>' +
-              '<td class="text-muted">' + formatDateTime(task.createdAt) + '</td>' +
-              '<td class="text-muted">' + formatDateTime(task.updatedAt) + '</td>';
-            tbody.appendChild(tr);
-          });
+			fetch('/api/tasks?page=' + page)
+				.then(function (response) {
+					if (!response.ok) {
+						throw new Error('サーバーからの応答が正常ではありません(ステータス:' + response.status + ')');
+					}
+					return response.json();
+				})
+				.then(function (data) {
+					const tbody = document.getElementById('task-table-body');
+					tbody.innerHTML = '';
 
-          currentPage = data.currentPage;
-          document.getElementById('page-info').textContent =
-            data.currentPage + ' / ' + data.totalPages;
+					// 空データ時の表示（0件）
+					if (!data.tasks || data.tasks.length === 0) {
+						// テーブル・ページャ非表示、空メッセージを表示
+						document.getElementById('loading').style.display = 'none';
+						document.getElementById('table-wrapper').style.display = 'none';
+						document.getElementById('pagination').style.display = 'none';
+						const emptyArea = document.getElementById('empty-area');
+						emptyArea.textContent = 'タスク件数は0件です。';
+						emptyArea.style.display = 'block';
+						// ページ情報がある場合は0/0などを表示しておく
+						document.getElementById('page-info').textContent = '0 / 0';
+						return;
+					}
 
-          document.getElementById('prev-page').disabled = (data.currentPage <= 1);
-          document.getElementById('next-page').disabled = (data.currentPage >= data.totalPages);
+					// 空でない場合は空メッセージを隠して通常表示
+					document.getElementById('empty-area').style.display = 'none';
 
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('table-wrapper').style.display = 'block';
-          document.getElementById('pagination').style.display = 'flex';
-        })
-        .catch(function (error) {
-          document.getElementById('loading').style.display = 'none';
-          const errorArea = document.getElementById('error-area');
-          errorArea.textContent = 'データが取得できません';
-          errorArea.style.display = 'block';
-        });
-    }
+					data.tasks.forEach(function (task) {
+						const tr = document.createElement('tr');
+						tr.innerHTML =
+							'<td class="text-center">' + task.id + '</td>' +
+							'<td class="font-bold">' + task.title + '</td>' +
+							'<td>' + (task.content || '') + '</td>' +
+							'<td>' + (task.name || '') + '</td>' +
+							'<td class="text-center">' + formatDateTime(task.startDate) + '</td>' +
+							'<td class="text-center">' + formatDateTime(task.endDate) + '</td>' +
+							'<td class="text-muted">' + formatDateTime(task.createdAt) + '</td>' +
+							'<td class="text-muted">' + formatDateTime(task.updatedAt) + '</td>' +
+							'<td>' +
+							'<a class="btn-action btn-edit" href="/tasks/edit/' + task.id + '?from=live">編集</a> ' +
+							'<button type="button" class="btn-action btn-delete" data-id="' + task.id + '">削除</button>' +
+							'</td>';
+						tbody.appendChild(tr);
+					});
 
-    document.getElementById('prev-page').addEventListener('click', function () {
-      loadTasks(currentPage - 1);
-    });
+					document.querySelectorAll('.btn-delete').forEach(function (button) {
+						button.addEventListener('click', function () {
+							const taskId = button.dataset.id;
 
-    document.getElementById('next-page').addEventListener('click', function () {
-      loadTasks(currentPage + 1);
-    });
+							if (!confirm('本当に削除しますか?')) {
+								return;
+							}
 
-    loadTasks(1);
-  </script>
+							fetch('/api/tasks/' + taskId, { method: 'DELETE' })
+								.then(function (response) {
+									if (!response.ok) {
+										throw new Error('削除に失敗しました(ステータス:' + response.status + ')');
+									}
+									loadTasks(currentPage);
+								})
+								.catch(function (error) {
+									alert('削除に失敗しました。');
+								});
+						});
+					});
+
+					currentPage = data.currentPage;
+					document.getElementById('page-info').textContent =
+						data.currentPage + ' / ' + data.totalPages;
+
+					document.getElementById('prev-page').disabled = (data.currentPage <= 1);
+					document.getElementById('next-page').disabled = (data.currentPage >= data.totalPages);
+
+					document.getElementById('loading').style.display = 'none';
+					document.getElementById('table-wrapper').style.display = 'block';
+					document.getElementById('pagination').style.display = 'flex';
+				})
+				.catch(function (error) {
+					document.getElementById('loading').style.display = 'none';
+					const errorArea = document.getElementById('error-area');
+					errorArea.textContent = 'データが取得できません';
+					errorArea.style.display = 'block';
+				});
+		}
+
+		document.getElementById('prev-page').addEventListener('click', function () {
+			loadTasks(currentPage - 1);
+		});
+
+		document.getElementById('next-page').addEventListener('click', function () {
+			loadTasks(currentPage + 1);
+		});
+
+		loadTasks(1);
+	</script>
 
 </body>
+
 </html>

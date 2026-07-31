@@ -6,7 +6,10 @@ import java.util.Map;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,5 +54,16 @@ public class TaskApiController {
 			throw new BusinessException("ログインが必要です。");
 		}
 		return user;
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id, HttpSession session) {
+		Login user = currentUser(session);
+		try {
+			taskService.deleteTask(id, user.getUsername());
+			return ResponseEntity.noContent().build();
+		} catch (BusinessException e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 }

@@ -19,6 +19,7 @@
     </div>
 
     <input type="hidden" th:field="*{id}">
+    <input type="hidden" name="from" th:value="${from}">
 
     <div class="form-group">
       <label for="title">タイトル</label>
@@ -47,7 +48,7 @@
     
     <div class="form-actions">
       <button type="submit" class="btn-submit">更新する</button>
-      <a th:href="@{/tasks}" class="btn-cancel">キャンセル</a>
+      <a th:href="@{/tasks(from=${from})}" class="btn-cancel">キャンセル</a>
     </div>
   </form>
 </div>
