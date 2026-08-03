@@ -115,23 +115,35 @@
 						tbody.appendChild(tr);
 					});
 
+					// 削除用メソッド
 					document.querySelectorAll('.btn-delete').forEach(function (button) {
 						button.addEventListener('click', function () {
 							const taskId = button.dataset.id;
 
-							if (!confirm('本当に削除しますか?')) {
-								return;
-							}
-
-							fetch('/api/tasks/' + taskId, { method: 'DELETE' })
+							fetch('/api/tasks/' + taskId)
 								.then(function (response) {
-									if (!response.ok) {
-										throw new Error('削除に失敗しました(ステータス:' + response.status + ')');
+									return response.json();
+								})
+								.then(function (data) {
+									const task = data.task;
+
+									if (!confirm('「' + task.title + '」を削除しますか?')) {
+										return;
 									}
-									loadTasks(currentPage);
+
+									fetch('/api/tasks/' + taskId, { method: 'DELETE' })
+										.then(function (response) {
+											if (!response.ok) {
+												throw new Error('削除に失敗しました');
+											}
+											loadTasks(currentPage);
+										})
+										.catch(function (error) {
+											alert('削除に失敗しました。');
+										});
 								})
 								.catch(function (error) {
-									alert('削除に失敗しました。');
+									alert('タスク情報の取得に失敗しました。');
 								});
 						});
 					});
