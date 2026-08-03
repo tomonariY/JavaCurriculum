@@ -17,6 +17,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		 // /tasks 配下、/api/tasks 配下はログイン必須のため認証チェックを挟む
 		registry.addInterceptor(loginInterceptor)		
-				.addPathPatterns("/tasks/**", "/api/tasks/**");
+				.addPathPatterns("/tasks/**");
 	}
 }
