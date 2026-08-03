@@ -30,15 +30,23 @@ public class TaskApiController {
 		this.taskService = taskService;
 	}
 
+	private Login currentUser(HttpSession session) {
+		Login user = (Login) session.getAttribute("loginUser");
+		if (user == null) {
+			throw new UnauthorizedException("ログインが必要です。");
+		}
+		return user;
+	}
+
+	// Task一覧とページネーションの表示
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> getTasks(
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			HttpSession session) {
 
-		
 		try {
 			Login user = currentUser(session);
-		
+
 			int safePage = taskService.clampPage(page, user.getUsername());
 			List<Task> tasks = taskService.getTaskByPage(safePage, user.getUsername());
 			int totalPages = taskService.getTotalPages(user.getUsername());
@@ -48,7 +56,7 @@ public class TaskApiController {
 			result.put("currentPage", safePage);
 			result.put("totalPages", totalPages);
 			return ResponseEntity.ok(result);
-			
+
 		} catch (UnauthorizedException e) {
 			return ResponseEntity.status(401).build();
 
@@ -56,31 +64,45 @@ public class TaskApiController {
 			return ResponseEntity.notFound().build();
 
 		}
-		
 
 	}
 
-	private Login currentUser(HttpSession session) {
-		Login user = (Login) session.getAttribute("loginUser");
-		if (user == null) {
-			throw new UnauthorizedException("ログインが必要です。");
+	// Task一覧から指定のIDを1件取得し表示
+	@GetMapping("/{id}")
+	public ResponseEntity<Map<String, Object>> getTaskById(
+			@PathVariable("id") Long id,
+			HttpSession session) {
+		try {
+			Login user = currentUser(session);
+			Task targetTask = taskService.getTaskById(id, user.getUsername());
+
+			Map<String, Object> result = new LinkedHashMap<>();
+			result.put("task", targetTask);
+			return ResponseEntity.ok(result);
+
+		} catch (UnauthorizedException e) {
+			return ResponseEntity.status(401).build();
+
+		} catch (BusinessException e) {
+			return ResponseEntity.notFound().build();
+
 		}
-		return user;
 	}
 
+	// Taskの削除用メソッド
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id, HttpSession session) {
 		try {
 			Login user = currentUser(session);
 			taskService.deleteTask(id, user.getUsername());
 			return ResponseEntity.noContent().build();
-			
+
 		} catch (UnauthorizedException e) {
 			return ResponseEntity.status(401).build();
 
 		} catch (BusinessException e) {
 			return ResponseEntity.notFound().build();
-			
+
 		}
 	}
 }
