@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import sample.common.dao.entity.Login;
 import sample.common.dao.entity.Task;
+import sample.common.dto.TaskUpdateRequest;
 import sample.common.logic.BusinessException;
 import sample.common.logic.UnauthorizedException;
 import sample.common.service.TaskService;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -70,8 +74,7 @@ public class TaskApiController {
 	// Task一覧から指定のIDを1件取得し表示
 	@GetMapping("/{id}")
 	public ResponseEntity<Map<String, Object>> getTaskById(
-			@PathVariable("id") Long id,
-			HttpSession session) {
+			@PathVariable("id") Long id, HttpSession session) {
 		try {
 			Login user = currentUser(session);
 			Task targetTask = taskService.getTaskById(id, user.getUsername());
@@ -86,6 +89,26 @@ public class TaskApiController {
 		} catch (BusinessException e) {
 			return ResponseEntity.notFound().build();
 
+		}
+	}
+
+	// Taskの更新用メソッド
+	@PutMapping("/{id}")
+	public ResponseEntity<Void> updateTask(
+			@PathVariable("id") Long id,
+			@RequestBody TaskUpdateRequest request,
+			HttpSession session) {
+
+		try {
+			Login user = currentUser(session);
+			taskService.updateTask(id, request, user.getUsername());
+			return ResponseEntity.ok().build();
+
+		} catch (UnauthorizedException e) {
+			return ResponseEntity.status(401).build();
+
+		} catch (BusinessException e) {
+			return ResponseEntity.notFound().build();
 		}
 	}
 
