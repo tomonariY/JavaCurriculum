@@ -35,7 +35,8 @@
 						<th>ID</th>
 						<th>タイトル</th>
 						<th>内容</th>
-						<th>登録者</th>
+						<!-- 登録者はログインユーザーになるため省く -->
+						<!-- <th>登録者</th> -->
 						<th>開始日</th>
 						<th>終了日</th>
 						<th>作成日時</th>
@@ -103,7 +104,8 @@
 							'<td class="text-center">' + task.id + '</td>' +
 							'<td class="font-bold">' + task.title + '</td>' +
 							'<td>' + (task.content || '') + '</td>' +
-							'<td>' + (task.name || '') + '</td>' +
+							// 登録者はログインユーザーになるため省く
+							// '<td>' + (task.name || '') + '</td>' +
 							'<td class="text-center">' + formatDateTime(task.startDate) + '</td>' +
 							'<td class="text-center">' + formatDateTime(task.endDate) + '</td>' +
 							'<td class="text-muted">' + formatDateTime(task.createdAt) + '</td>' +
