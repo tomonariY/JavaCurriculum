@@ -30,6 +30,27 @@ public class TaskController {
 		this.taskService = taskService;
 	}
 
+	// ホーム画面(Task) API実装
+	@RequestMapping(value = "/tasks/live", method = RequestMethod.GET)
+	public ModelAndView showApiTaskList(ModelAndView mv) {
+		mv.setViewName("tasks/live");
+		return mv;
+	}
+
+		// 編集＆更新
+	@RequestMapping(value = "/tasks/edit/{id}", method = RequestMethod.GET)
+	public ModelAndView editTaskList(
+			@PathVariable("id") Long id,
+			@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
+			HttpSession session, ModelAndView mv) {
+
+		mv.addObject("id", id);
+		mv.addObject("from", from);
+		mv.setViewName("tasks/live-edit");
+		return mv;
+	}
+
+	// === 旧ホーム画面(Web API経由でないもの) == //
 	// ホーム画面(Task)
 	@RequestMapping(value = "/tasks", method = RequestMethod.GET)
 	public ModelAndView showTaskList(
@@ -37,12 +58,12 @@ public class TaskController {
 			@RequestParam(value = "from", required = false) String from,
 			HttpSession session,
 			ModelAndView mv) {
-		
+
 		if ("live".equals(from)) {
 			mv.setViewName("redirect:/tasks/live");
 			return mv;
 		}
-		
+
 		Login user = currentUser(session);
 		int safePage = taskService.clampPage(page, user.getUsername());
 		List<Task> taskList = taskService.getTaskByPage(safePage, user.getUsername());
@@ -57,18 +78,11 @@ public class TaskController {
 
 	}
 
-	// ホーム画面(Task) API実装
-	@RequestMapping(value = "/tasks/live", method = RequestMethod.GET)
-	public ModelAndView showApiTaskList(ModelAndView mv) {
-		mv.setViewName("tasks/live");
-		return mv;
-	}
-
 	// 新規追加
 	@RequestMapping(value = "/tasks/new", method = RequestMethod.GET)
 	public ModelAndView newTaskList(
-		@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
-		ModelAndView mv) {
+			@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
+			ModelAndView mv) {
 		mv.addObject("taskForm", new Task());
 		mv.addObject("from", from);
 		mv.setViewName("tasks/form-new");
@@ -77,9 +91,9 @@ public class TaskController {
 
 	@RequestMapping(value = "/tasks/new", method = RequestMethod.POST)
 	public String insertTaskList(
-		@ModelAttribute("taskForm") Task task, 
-		@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
-		HttpSession session) {
+			@ModelAttribute("taskForm") Task task,
+			@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
+			HttpSession session) {
 
 		Login user = currentUser(session);
 		task.setUsername(user.getUsername());
@@ -92,22 +106,6 @@ public class TaskController {
 		return "redirect:/tasks";
 	}
 
-	// 編集＆更新
-	@RequestMapping(value = "/tasks/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editTaskList(
-			@PathVariable("id") Long id,
-			@RequestParam(value = "from", required = false, defaultValue = "tasks") String from,
-			HttpSession session, ModelAndView mv) {
-
-		Login user = currentUser(session);
-		Task targetTask = taskService.getTaskById(id, user.getUsername());
-
-		mv.addObject("taskForm", targetTask);
-		mv.addObject("from", from);
-		mv.setViewName("tasks/form-edit");
-		return mv;
-	}
-
 	@RequestMapping(value = "/tasks/edit", method = RequestMethod.POST)
 	public String updateTaskList(
 			@ModelAttribute("taskForm") Task task,
@@ -116,11 +114,11 @@ public class TaskController {
 
 		Login user = currentUser(session);
 		taskService.updateTask(task, user.getUsername());
-		
+
 		if ("live".equals(from)) {
 			return "redirect:/tasks/live";
 		}
-		
+
 		return "redirect:/tasks";
 	}
 

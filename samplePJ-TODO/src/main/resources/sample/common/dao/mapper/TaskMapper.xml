@@ -40,6 +40,17 @@
 		)
 	</insert>
 
+	<update id="updateTaskOld">
+		UPDATE tasks
+		SET
+		title = #{title},
+		content = #{content},
+		start_date = #{startDate},
+		end_date = #{endDate},
+		updated_at = NOW()
+		WHERE id = #{id} AND username = #{username}
+	</update>
+
 	<update id="updateTaskByUser">
 		UPDATE tasks
 		SET

@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -101,7 +100,7 @@ public class TaskApiController {
 
 		try {
 			Login user = currentUser(session);
-			taskService.updateTask(id, request, user.getUsername());
+			taskService.updateTask(id, request, user.getUsername());;
 			return ResponseEntity.ok().build();
 
 		} catch (UnauthorizedException e) {

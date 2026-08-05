@@ -58,7 +58,7 @@ public class TaskService {
 	@Transactional
 	public void updateTask(Task task, String username) {
 		task.setUsername(username);
-		int updated = taskMapper.updateTaskByUser(task);
+		int updated = taskMapper.updateTaskOld(task);
 		if (updated == 0) {
 			throw new BusinessException("更新対象のタスクが見つかりません。");
 		}

@@ -27,14 +27,14 @@ public interface TaskMapper {
 	Task findByIdAndUser(@Param("id") Long id, @Param("username") String username);
 
 	// 更新のため
-	// == 旧 更新(Mapper) 使用しなくなる予定 == //
-	int updateTaskByUser(Task task);
-
-	// ====================================== //
 	int updateTaskByUser(
 			@Param("id") Long id,
 			@Param("request") TaskUpdateRequest request,
 			@Param("username") String username);
+
+	// == 旧 更新(Mapper) 使用しなくなる予定 == //
+	int updateTaskOld(Task task);
+	// ====================================== //
 
 	// 削除のため
 	int deleteTaskByUser(@Param("id") Long id, @Param("username") String username);
