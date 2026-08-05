@@ -30,11 +30,12 @@
       <label for="content">内容</label>
       <textarea th:field="*{content}" placeholder="タスクの詳細内容を入力"></textarea>
     </div>
-    
-    <div class="form-group">
+  
+    <!-- 登録者はログインユーザーになるため省く -->
+    <!-- <div class="form-group">
       <label for="name">名前</label>
       <input type="text" th:field="*{name}" placeholder="登録者の名前を入力">
-    </div>
+    </div> -->
     
     <div class="form-group">
       <label for="startDate">開始日</label>
