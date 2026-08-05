@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>タスク編集(API版)</title>
+    <!-- Spring Boot 起動用 CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+    <!-- ローカル用 CSS -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" href="../../static/css/form.css">
+</head>
+
+<body>
+
+    <div class="form-container">
+        <div class="form-card">
+            <form id="edit-form">
+                <h1>タスク編集（API版）</h1>
+
+                <div id="error-area" class="error-message" style="display:none;"></div>
+                <div id="empty-area" class="empty-message" style="display:none;"></div>
+
+                <div class="form-group row-id">
+                    <label for="id">タスクID</label>
+                    <span th:text="*{id}" class="id-value"></span>
+                </div>
+
+                <input type="hidden" id="id" value="id">
+                <input type="hidden" id="from" name="from" value="from">
+
+                <div class="form-group">
+                    <label for="title">タイトル</label>
+                    <input id="title" type="text" placeholder="タスクのタイトルを入力">
+                </div>
+
+                <div class="form-group">
+                    <label for="content">内容</label>
+                    <textarea id="content" placeholder="タスクの詳細内容を入力"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">名前</label>
+                    <input id="name" type="text" placeholder="登録者の名前を入力">
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate">開始日</label>
+                    <input id="startDate" type="date">
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate">終了日</label>
+                    <input id="endDate" type="date">
+                </div>
+
+
+
+                <div class="form-actions">
+                    <button type="submit" id="btn-update" class="btn-submit">更新する</button>
+                    <a th:href="@{/tasks(from=${from})}" class="btn-cancel">キャンセル</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function loadTask(id) {
+            fetch('/api/tasks/' + id)
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('サーバーからの応答が正常ではありません(ステータス:' + response.status + ')');
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    document.getElementById('id').value = data.task.id;
+                    document.getElementById('title').value = data.task.title;
+                    document.getElementById('content').value = data.task.content;
+                    document.getElementById('startDate').value = data.task.startDate;
+                    document.getElementById('endDate').value = data.task.endDate;
+                })
+                .catch(function (error) {
+                    alert('タスク情報の取得に失敗しました。');
+                });
+
+        };
+
+        // 更新用メソッド
+        document.getElementById('btn-update').addEventListener('click', function () {
+            const requestBody = {
+                title: document.getElementById('title').value,
+                content: document.getElementById('content').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value
+            }
+
+            fetch('/api/tasks/' + taskId, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody)
+            })
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('更新に失敗しました');
+                    }
+                    location.href = '/tasks/live';
+                })
+                .catch(function (error) {
+                    alert('更新に失敗しました');
+                });
+        });
+
+        const path = window.location.pathname;
+        const taskId = path.split('/').pop();
+
+        loadTask(taskId);
+    </script>
+
+</body>
+
+</html>

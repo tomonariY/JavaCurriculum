@@ -16,6 +16,7 @@ import com.opencsv.CSVWriter;
 
 import sample.common.dao.entity.Task;
 import sample.common.dao.mapper.TaskMapper;
+import sample.common.dto.TaskUpdateRequest;
 import sample.common.logic.BusinessException;
 
 @Service
@@ -34,7 +35,7 @@ public class TaskService {
 		taskMapper.insertTask(task);
 	}
 
-	// 編集 ＆ 更新
+	// 1件タスク情報を取得する
 	@Transactional(readOnly = true)
 	public Task getTaskById(Long id, String username) {
 		Task task = taskMapper.findByIdAndUser(id, username);
@@ -43,15 +44,26 @@ public class TaskService {
 		}
 		return task;
 	}
+	
+	// 更新
+	@Transactional
+	public void updateTask(Long id, TaskUpdateRequest request, String username) {
+		int updated = taskMapper.updateTaskByUser(id, request, username);
+				if (updated == 0) {
+			throw new BusinessException("更新対象のタスクが見つかりません。");
+		}
+	}
 
+	// == 旧 更新ロジック(Service) 使用しなくなる予定 == //
 	@Transactional
 	public void updateTask(Task task, String username) {
 		task.setUsername(username);
-		int updated = taskMapper.updateTaskByUser(task);
+		int updated = taskMapper.updateTaskOld(task);
 		if (updated == 0) {
 			throw new BusinessException("更新対象のタスクが見つかりません。");
 		}
 	}
+	// ============================================== //
 
 	// 削除
 	@Transactional

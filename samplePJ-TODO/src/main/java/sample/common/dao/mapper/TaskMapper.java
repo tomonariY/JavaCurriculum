@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import sample.common.dao.entity.Task;
+import sample.common.dto.TaskUpdateRequest;
 
 @Mapper
 public interface TaskMapper {
@@ -15,7 +16,8 @@ public interface TaskMapper {
 	void insertTask(Task task);
 
 	// ページネーションのため
-	List<Task> selectPageByUser(@Param("username") String username,
+	List<Task> selectPageByUser(
+			@Param("username") String username,
 			@Param("limit") int limit,
 			@Param("offset") int offset);
 
@@ -25,13 +27,21 @@ public interface TaskMapper {
 	Task findByIdAndUser(@Param("id") Long id, @Param("username") String username);
 
 	// 更新のため
-	int updateTaskByUser(Task task);
+	int updateTaskByUser(
+			@Param("id") Long id,
+			@Param("request") TaskUpdateRequest request,
+			@Param("username") String username);
+
+	// == 旧 更新(Mapper) 使用しなくなる予定 == //
+	int updateTaskOld(Task task);
+	// ====================================== //
 
 	// 削除のため
 	int deleteTaskByUser(@Param("id") Long id, @Param("username") String username);
 
 	// CSV出力のため
-	List<Task> selectTasksForExportByPeriod(@Param("username") String username,
+	List<Task> selectTasksForExportByPeriod(
+			@Param("username") String username,
 			@Param("startDate") LocalDate startDate,
 			@Param("endDate") LocalDate endDate);
 

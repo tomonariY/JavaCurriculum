@@ -28,28 +28,36 @@
 		INSERT INTO tasks (
 		title,
 		content,
-		name,
 		start_date,
 		end_date,
 		username
 		) VALUES (
 		#{title},
 		#{content},
-		#{name},
 		#{startDate},
 		#{endDate},
 		#{username}
 		)
 	</insert>
 
-	<update id="updateTaskByUser">
+	<update id="updateTaskOld">
 		UPDATE tasks
 		SET
 		title = #{title},
 		content = #{content},
-		name = #{name},
 		start_date = #{startDate},
 		end_date = #{endDate},
+		updated_at = NOW()
+		WHERE id = #{id} AND username = #{username}
+	</update>
+
+	<update id="updateTaskByUser">
+		UPDATE tasks
+		SET
+		title = #{request.title},
+		content = #{request.content},
+		start_date = #{request.startDate},
+		end_date = #{request.endDate},
 		updated_at = NOW()
 		WHERE id = #{id} AND username = #{username}
 	</update>
