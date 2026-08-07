@@ -22,9 +22,7 @@
 		WHERE id = #{id} AND username = #{username}
 	</select>
 
-	<insert id="insertTask"
-		parameterType="sample.common.dao.entity.Task" useGeneratedKeys="true"
-		keyProperty="id">
+	<insert id="insertTaskByUser">
 		INSERT INTO tasks (
 		title,
 		content,
@@ -32,24 +30,13 @@
 		end_date,
 		username
 		) VALUES (
-		#{title},
-		#{content},
-		#{startDate},
-		#{endDate},
+		#{request.title},
+		#{request.content},
+		#{request.startDate},
+		#{request.endDate},
 		#{username}
 		)
 	</insert>
-
-	<update id="updateTaskOld">
-		UPDATE tasks
-		SET
-		title = #{title},
-		content = #{content},
-		start_date = #{startDate},
-		end_date = #{endDate},
-		updated_at = NOW()
-		WHERE id = #{id} AND username = #{username}
-	</update>
 
 	<update id="updateTaskByUser">
 		UPDATE tasks
@@ -84,4 +71,35 @@
 		AND id = #{id}
 	</select>
 	
+
+	<!-- 旧更新用SQL -->
+	<insert id="insertTask"
+		parameterType="sample.common.dao.entity.Task" useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO tasks (
+		title,
+		content,
+		start_date,
+		end_date,
+		username
+		) VALUES (
+		#{title},
+		#{content},
+		#{startDate},
+		#{endDate},
+		#{username}
+		)
+	</insert>
+	
+	<update id="updateTask">
+		UPDATE tasks
+		SET
+		title = #{title},
+		content = #{content},
+		start_date = #{startDate},
+		end_date = #{endDate},
+		updated_at = NOW()
+		WHERE id = #{id} AND username = #{username}
+	</update>
+
 </mapper>
