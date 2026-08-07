@@ -15,64 +15,76 @@ public class Task {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
-	// Getter データの取得メソッド
+	// id:ID
 	public Long getId() {
 		return id;
 	}
-	public String getUsername() {
-		// user名
-		return username;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public String getContent() {
-		return content;
-	}
-	public String getName() {
-		// 登録者名
-		return name;
-	}
-	public LocalDate getStartDate() {
-		return startDate;
-	}
-	public LocalDate getEndDate() {
-		return endDate;
-	}
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-	
-	// Setter データの設定メソッド
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	// username:ユーザー名
+	public String getUsername() {
+		return username;
 	}
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+	// title:タイトル
+	public String getTitle() {
+		return title;
+	}
 	public void setTitle(String title) {
-		this.title= title;
+		this.title = title;
+	}
+
+	// content:内容
+	public String getContent() {
+		return content;
 	}
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+	// name:登録者名
+	public String getName() {
+		return name;
+	}
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	// startDate:開始日
+	public LocalDate getStartDate() {
+		return startDate;
 	}
 	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
+
+	// endDate:終了日
+	public LocalDate getEndDate() {
+		return endDate;
+	}
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
+	}
+
+	// createdAt:作成日
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
 	}
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+
+	// updatedAt:更新日
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	
+
 }
