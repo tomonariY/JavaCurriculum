@@ -13,15 +13,10 @@ import sample.common.dto.TaskUpdateRequest;
 public interface TaskMapper {
 
 	// 新規作成のため
-	void insertTask(Task task);
-
-	// ページネーションのため
-	List<Task> selectPageByUser(
-			@Param("username") String username,
-			@Param("limit") int limit,
-			@Param("offset") int offset);
-
-	long countTotalByUser(@Param("username") String username);
+	int insertTaskByUser(
+		@Param("request") TaskUpdateRequest request,
+		@Param("username") String username
+	);
 
 	// id取得のため
 	Task findByIdAndUser(@Param("id") Long id, @Param("username") String username);
@@ -31,10 +26,6 @@ public interface TaskMapper {
 			@Param("id") Long id,
 			@Param("request") TaskUpdateRequest request,
 			@Param("username") String username);
-
-	// == 旧 更新(Mapper) 使用しなくなる予定 == //
-	int updateTaskOld(Task task);
-	// ====================================== //
 
 	// 削除のため
 	int deleteTaskByUser(@Param("id") Long id, @Param("username") String username);
@@ -47,4 +38,16 @@ public interface TaskMapper {
 
 	Task selectTaskForExportById(@Param("username") String username,
 			@Param("id") Long id);
+
+	// ページネーションのため
+	List<Task> selectPageByUser(
+			@Param("username") String username,
+			@Param("limit") int limit,
+			@Param("offset") int offset);
+
+	long countTotalByUser(@Param("username") String username);
+
+	// == 旧 Mapper 使用しなくなる予定 == //
+	int updateTask(Task task);
+	void insertTask(Task task);
 }
