@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -122,6 +123,23 @@ public class TaskApiController {
 		}
 	}
 
+	// Taskの新規作成用メソッド
+	@PostMapping
+	public ResponseEntity<Void> insertTask(
+		@RequestBody TaskUpdateRequest request,
+		HttpSession session) {
+
+		try {
+			Login user = currentUser(session);
+			taskService.insertApiTask(request, user.getUsername());
+			return ResponseEntity.status(201).build();
+
+		} catch (UnauthorizedException e) {
+			return ResponseEntity.status(401).build();
+
+		} 
+	}
+
 	// Taskの更新用メソッド
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateTask(
@@ -131,8 +149,7 @@ public class TaskApiController {
 
 		try {
 			Login user = currentUser(session);
-			taskService.updateTask(id, request, user.getUsername());
-			;
+			taskService.updateApiTask(id, request, user.getUsername());
 			return ResponseEntity.ok().build();
 
 		} catch (UnauthorizedException e) {

@@ -31,9 +31,8 @@ public class TaskService {
 
 	// 新規追加
 	@Transactional
-	public void insertTask(Task task, String username) {
-		task.setUsername(username);
-		taskMapper.insertTask(task);
+	public void insertApiTask(TaskUpdateRequest request, String username) {
+		taskMapper.insertTaskByUser(request, username);
 	}
 
 	// 1件タスク情報を取得する
@@ -48,23 +47,12 @@ public class TaskService {
 
 	// 更新
 	@Transactional
-	public void updateTask(Long id, TaskUpdateRequest request, String username) {
+	public void updateApiTask(Long id, TaskUpdateRequest request, String username) {
 		int updated = taskMapper.updateTaskByUser(id, request, username);
 		if (updated == 0) {
 			throw new BusinessException("更新対象のタスクが見つかりません。");
 		}
 	}
-
-	// == 旧 更新ロジック(Service) 使用しなくなる予定 == //
-	@Transactional
-	public void updateTask(Task task, String username) {
-		task.setUsername(username);
-		int updated = taskMapper.updateTaskOld(task);
-		if (updated == 0) {
-			throw new BusinessException("更新対象のタスクが見つかりません。");
-		}
-	}
-	// ============================================== //
 
 	// 削除
 	@Transactional
@@ -171,5 +159,21 @@ public class TaskService {
 
 	private String formatDateTime(LocalDateTime dateTime) {
 		return dateTime != null ? dateTime.format(DATE_TIME_FORMATTER) : "";
+	}
+
+	// == 旧 Service 使用しなくなる予定 == //
+	@Transactional
+	public void insertTask(Task task, String username) {
+		task.setUsername(username);
+		taskMapper.insertTask(task);
+	}
+
+	@Transactional
+	public void updateTask(Task task, String username) {
+		task.setUsername(username);
+		int updated = taskMapper.updateTask(task);
+		if (updated == 0) {
+			throw new BusinessException("更新対象のタスクが見つかりません。");
+		}
 	}
 }
