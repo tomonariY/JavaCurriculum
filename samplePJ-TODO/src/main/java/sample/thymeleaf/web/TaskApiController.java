@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import sample.common.dao.entity.Login;
 import sample.common.dao.entity.Task;
-import sample.common.dto.TaskUpdateRequest;
+import sample.common.dto.TaskRequest;
 import sample.common.logic.BusinessException;
 import sample.common.logic.UnauthorizedException;
 import sample.common.logic.ValidationException;
@@ -126,7 +126,7 @@ public class TaskApiController {
 	// Taskの新規作成用メソッド
 	@PostMapping
 	public ResponseEntity<Void> insertTask(
-		@RequestBody TaskUpdateRequest request,
+		@RequestBody TaskRequest request,
 		HttpSession session) {
 
 		try {
@@ -144,7 +144,7 @@ public class TaskApiController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> updateTask(
 			@PathVariable("id") Long id,
-			@RequestBody TaskUpdateRequest request,
+			@RequestBody TaskRequest request,
 			HttpSession session) {
 
 		try {

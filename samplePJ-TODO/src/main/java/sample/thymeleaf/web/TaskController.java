@@ -57,7 +57,7 @@ public class TaskController {
 		return mv;
 	}
 
-	// 編集＆更新 API実装
+	// 編集＆更新
 	@RequestMapping(value = "/tasks/edit/{id}", method = RequestMethod.GET)
 	public ModelAndView editApiTaskList(
 			@PathVariable("id") Long id,
@@ -147,7 +147,6 @@ public class TaskController {
 		mv.setViewName("tasks/tasks");
 
 		return mv;
-
 	}
 
 		@RequestMapping(value = "/tasks/new", method = RequestMethod.POST)
