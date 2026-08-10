@@ -2,7 +2,7 @@ package sample.common.dto;
 
 import java.time.LocalDate;
 
-public class TaskUpdateRequest {
+public class TaskRequest {
     
     private String title;
     private String content;

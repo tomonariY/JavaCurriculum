@@ -16,7 +16,7 @@ import com.opencsv.CSVWriter;
 
 import sample.common.dao.entity.Task;
 import sample.common.dao.mapper.TaskMapper;
-import sample.common.dto.TaskUpdateRequest;
+import sample.common.dto.TaskRequest;
 import sample.common.logic.BusinessException;
 import sample.common.logic.ValidationException;
 
@@ -29,12 +29,6 @@ public class TaskService {
 		this.taskMapper = taskMapper;
 	}
 
-	// 新規追加
-	@Transactional
-	public void insertApiTask(TaskUpdateRequest request, String username) {
-		taskMapper.insertTaskByUser(request, username);
-	}
-
 	// 1件タスク情報を取得する
 	@Transactional(readOnly = true)
 	public Task getTaskById(Long id, String username) {
@@ -45,9 +39,15 @@ public class TaskService {
 		return task;
 	}
 
+	// 新規追加
+	@Transactional
+	public void insertApiTask(TaskRequest request, String username) {
+		taskMapper.insertTaskByUser(request, username);
+	}
+
 	// 更新
 	@Transactional
-	public void updateApiTask(Long id, TaskUpdateRequest request, String username) {
+	public void updateApiTask(Long id, TaskRequest request, String username) {
 		int updated = taskMapper.updateTaskByUser(id, request, username);
 		if (updated == 0) {
 			throw new BusinessException("更新対象のタスクが見つかりません。");
@@ -108,7 +108,7 @@ public class TaskService {
 		if (startDate.isAfter(endDate)) {
 			throw new ValidationException("不正な日付範囲です。");
 		}
-		
+
 		return taskMapper.selectTasksForExportByPeriod(username, startDate, endDate);
 	}
 
