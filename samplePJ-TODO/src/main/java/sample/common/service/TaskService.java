@@ -18,6 +18,7 @@ import sample.common.dao.entity.Task;
 import sample.common.dao.mapper.TaskMapper;
 import sample.common.dto.TaskUpdateRequest;
 import sample.common.logic.BusinessException;
+import sample.common.logic.ValidationException;
 
 @Service
 public class TaskService {
@@ -99,6 +100,16 @@ public class TaskService {
 			throw new BusinessException("出力件数は0件です。");
 		}
 		return tasks;
+	}
+
+	@Transactional(readOnly = true)
+	public List<Task> exportTasksByPeriodApi(String username, LocalDate startDate, LocalDate endDate) {
+		// CSV出力(新規、0件チェックの部分がない)
+		if (startDate.isAfter(endDate)) {
+			throw new ValidationException("不正な日付範囲です。");
+		}
+		
+		return taskMapper.selectTasksForExportByPeriod(username, startDate, endDate);
 	}
 
 	@Transactional(readOnly = true)

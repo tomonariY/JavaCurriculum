@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CSV出力</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+    <!-- ローカル用 CSS -->
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" href="../../static/css/form.css">
+</head>
+
+<body>
+
+    <div class="form-container">
+        <div class="form-card">
+            <form id="export-form">
+                <h1>CSV出力(API版)</h1>
+
+                <div id="error-area" class="error-message" style="display:none;"></div>
+                <div id="empty-area" class="error-message" style="display:none;"></div>
+
+                <p class="input-help">出力したい期間を指定してください</p>
+
+                <div class="form-group">
+                    <label for="startDate">開始日</label>
+                    <input id="startDate" type="date" name="startDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate">終了日</label>
+                    <input id="endDate" type="date" name="endDate">
+                </div>
+
+                <div class="form-actions">
+                    <button id="btn-export" type="button" class="btn-submit">CSV出力する</button>
+                    <a href="/tasks/live" class="btn-cancel">キャンセル</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('btn-export').addEventListener('click', function () {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const errorArea = document.getElementById('error-area');
+            const emptyArea = document.getElementById('empty-area');
+
+            fetch('/api/tasks/export?startDate=' + startDate + '&endDate=' + endDate)
+
+
+                .then(function (response) {
+                    if (!response.ok) {
+                        const error = new Error('サーバーからの応答が正常ではありません(ステータス:' + response.status + ')');
+                        error.status = response.status;
+                        throw error;
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    if (!data.tasks || data.tasks.length === 0) {
+                        emptyArea.textContent = 'タスク件数0件です。';
+                        errorArea.style.display = 'none';
+                        emptyArea.style.display = 'block';
+                        return;
+                    }
+
+                    // CSVの文字列変換
+                    const header = 'タイトル,内容,開始日,終了日';
+                    const rows = [];
+
+                    data.tasks.forEach(function (task) {
+                        const row =
+                            task.title + ',' +
+                            task.content + ',' +
+                            task.startDate + ',' +
+                            task.endDate;
+                        rows.push(row);
+                    });
+
+                    const csvBody = rows.join('\n');
+                    const csvText = header + '\n' + csvBody;
+
+                    // ファイルをブラウザへ認識させる
+                    const bom = '\uFEFF';
+                    const blob = new Blob([bom + csvText], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'tasks.csv';
+                    link.click();
+
+                    location.href = '/tasks/live';
+                })
+                .catch(function (error) {
+                    emptyArea.style.display = 'none';
+                    errorArea.style.display = 'block';
+
+                    console.log(error.message);
+
+                    if(error.status === 400) {
+                        errorArea.textContent = '日付を指定して下さい';
+                    } else {
+                        errorArea.textContent = 'データが出力できません';                      
+                    }
+
+                });
+        });
+    </script>
+</body>
+
+</html>
