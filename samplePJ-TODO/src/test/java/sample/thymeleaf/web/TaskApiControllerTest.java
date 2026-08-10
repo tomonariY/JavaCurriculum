@@ -62,7 +62,7 @@ public class TaskApiControllerTest {
 				
 	}
 	
-	@Test
+	@Test // 異常系
 	void getTasks_redirectsToLoginWhenNotLoggedIn() throws Exception {
 	    // given: セッションにloginUserを設定しない（未ログイン状態）
 		MockHttpSession emptySession = new MockHttpSession();
@@ -70,8 +70,7 @@ public class TaskApiControllerTest {
 	    // when / then: LoginInterceptorによって/loginへリダイレクトされる
 		mockMvc.perform(get("/api/tasks")
 						.session(emptySession))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/login"));
+				.andExpect(status().isUnauthorized());
 
 	}
 
