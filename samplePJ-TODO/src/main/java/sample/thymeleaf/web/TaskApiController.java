@@ -1,11 +1,13 @@
 package sample.thymeleaf.web;
 
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import sample.common.dao.entity.Task;
 import sample.common.dto.TaskUpdateRequest;
 import sample.common.logic.BusinessException;
 import sample.common.logic.UnauthorizedException;
+import sample.common.logic.ValidationException;
 import sample.common.service.TaskService;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -70,6 +73,34 @@ public class TaskApiController {
 
 	}
 
+	// Task CSV出力用メソッド
+	@GetMapping("/export")
+	public ResponseEntity<Map<String, Object>> getTaskByCsv(
+			@RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+			@RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+			HttpSession session) {
+				
+		try {
+			Login user = currentUser(session);
+			if (startDate == null || endDate == null) {
+				throw new ValidationException("出力条件を指定してください。");
+			}
+
+			List<Task> tasks = taskService.exportTasksByPeriodApi(user.getUsername(), startDate, endDate);
+
+			Map<String, Object> result = new LinkedHashMap<>();
+			result.put("tasks", tasks);
+			return ResponseEntity.ok(result);
+
+		} catch (ValidationException e) {
+			return ResponseEntity.status(400).build();
+		} catch (UnauthorizedException e) {
+			return ResponseEntity.status(401).build();
+		} catch (BusinessException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
 	// Task一覧から指定のIDを1件取得し表示
 	@GetMapping("/{id}")
 	public ResponseEntity<Map<String, Object>> getTaskById(
@@ -100,7 +131,8 @@ public class TaskApiController {
 
 		try {
 			Login user = currentUser(session);
-			taskService.updateTask(id, request, user.getUsername());;
+			taskService.updateTask(id, request, user.getUsername());
+			;
 			return ResponseEntity.ok().build();
 
 		} catch (UnauthorizedException e) {

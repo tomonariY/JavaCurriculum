@@ -18,6 +18,7 @@ import sample.common.dao.entity.Task;
 import sample.common.dao.mapper.TaskMapper;
 import sample.common.dto.TaskUpdateRequest;
 import sample.common.logic.BusinessException;
+import sample.common.logic.ValidationException;
 
 @Service
 public class TaskService {
@@ -44,12 +45,12 @@ public class TaskService {
 		}
 		return task;
 	}
-	
+
 	// 更新
 	@Transactional
 	public void updateTask(Long id, TaskUpdateRequest request, String username) {
 		int updated = taskMapper.updateTaskByUser(id, request, username);
-				if (updated == 0) {
+		if (updated == 0) {
 			throw new BusinessException("更新対象のタスクが見つかりません。");
 		}
 	}
@@ -114,6 +115,16 @@ public class TaskService {
 	}
 
 	@Transactional(readOnly = true)
+	public List<Task> exportTasksByPeriodApi(String username, LocalDate startDate, LocalDate endDate) {
+		// CSV出力(新規、0件チェックの部分がない)
+		if (startDate.isAfter(endDate)) {
+			throw new ValidationException("不正な日付範囲です。");
+		}
+		
+		return taskMapper.selectTasksForExportByPeriod(username, startDate, endDate);
+	}
+
+	@Transactional(readOnly = true)
 	public Task exportTaskById(Long id, String username) {
 		Task task = taskMapper.selectTaskForExportById(username, id);
 		if (task == null) {
@@ -121,9 +132,9 @@ public class TaskService {
 		}
 		return task;
 	}
-	
+
 	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	
+
 	public byte[] convertTasksToCsv(List<Task> tasks) {
 		String[] header = { "ID", "ユーザー名", "タイトル", "内容", "登録者", "開始日", "終了日", "作成日時", "更新日" };
 
@@ -157,7 +168,7 @@ public class TaskService {
 		}
 
 	}
-	
+
 	private String formatDateTime(LocalDateTime dateTime) {
 		return dateTime != null ? dateTime.format(DATE_TIME_FORMATTER) : "";
 	}
