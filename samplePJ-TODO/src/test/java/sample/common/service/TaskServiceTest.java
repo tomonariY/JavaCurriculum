@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,7 +28,7 @@ class TaskServiceTest {
 	@InjectMocks
 	private TaskService taskService;
 
-	// ===== getTaskById =====	
+	// ===== getTaskById =====
 	@Test // 正常系
 	void getTaskById_対象が有れば本人のタスクを返す() {
 		// given
@@ -52,19 +54,84 @@ class TaskServiceTest {
 				.hasMessage("対象のタスクが見つかりません。");
 	}
 
-	@Test // 境界値
-	void getTotalPages_件数からページ数を切り上げ最低1を返す() {
-		// given: 11 件 → 10 件/ページなので 2 ページ
-		when(taskMapper.countTotalByUser("alice")).thenReturn(11L);
+	// ===== getTaskByPage =====
+	@Test // 正常系
+	void getTaskByPage_2ページ目はoffset10でMapperを呼ぶ() {
+		// given: 25件 → 3ページ
+		when(taskMapper.countTotalByUser("alice")).thenReturn(25L);
 
-		// when / then
-		assertThat(taskService.getTotalPages("alice")).isEqualTo(2);
+		// when
+		taskService.getTaskByPage(2, "alice");
+
+		// then: 2ページ目 → offset = (2-1) * 10 = 10
+		verify(taskMapper).selectPageByUser("alice", 10, 10);
 	}
 
-	// ===== updateApiTask =====	
-	
+	@Test // 境界値
+	void getTaskByPage_1ページ目はoffset0でMapperを呼ぶ() {
+		// given: 25件 → 3ページ
+		when(taskMapper.countTotalByUser("alice")).thenReturn(25L);
 
-	// ===== insertTask =====	
+		// when
+		taskService.getTaskByPage(1, "alice");
+
+		// then: 2ページ目 → offset = (1-1) * 10 = 0
+		verify(taskMapper).selectPageByUser("alice", 10, 0);
+	}
+
+	@Test // 境界値
+	void getTaskByPage_範囲外ページは最終ページに丸めてMapperを呼ぶ() {
+		// given: 25件 → 3ページ。それを超える 99 ページを要求する
+		when(taskMapper.countTotalByUser("alice")).thenReturn(25L);
+		when(taskMapper.selectPageByUser("alice", 10, 20)).thenReturn(List.of());
+
+		// when
+		List<Task> actual = taskService.getTaskByPage(99, "alice");
+
+		// then: 3ページ目に丸められ、offset = (3-1) * 10 = 20
+		verify(taskMapper).selectPageByUser("alice", 10, 20);
+		assertThat(actual).isEmpty();
+	}
+
+	// ===== getTotalPages =====
+	@ParameterizedTest(name = "総件数{0}件 → {1}ページ")
+	@CsvSource({
+			"0,  1", // 0件でも最低1ページ(Math.max のガード)
+			"1,  1",
+			"10, 1", // ちょうど1ページ分
+			"11, 2", // 1件あふれたら2ページ
+			"20, 2",
+			"21, 3"
+	})
+	void getTotalPages_件数からページ数を計算する(long total, int expected) {
+		// given
+		when(taskMapper.countTotalByUser("alice")).thenReturn(total);
+
+		// when / then
+		assertThat(taskService.getTotalPages("alice")).isEqualTo(expected);
+	}
+
+	// ===== clampPage =====
+	@ParameterizedTest(name = "page={0} → {1}")
+	@CsvSource({
+			"-5, 1",
+			"0,  1",
+			"1,  1",
+			"3,  3",
+			"4,  3",
+			"999, 3"
+	})
+	void clampPage_1からtotalPagesの範囲に丸められる(int page, int expected) {
+		// given
+		when(taskMapper.countTotalByUser("alice")).thenReturn(25L);
+
+		// when / then
+		assertThat(taskService.clampPage(page, "alice")).isEqualTo(expected);
+	}
+
+	// ===== updateApiTask =====
+
+	// ===== insertTask =====
 	@Test // 正常系
 	void insertTask_引数のusernameがtaskにセットされて保存される() {
 		// given
@@ -79,7 +146,7 @@ class TaskServiceTest {
 		verify(taskMapper).insertTask(task);
 	}
 
-	// ===== deleteTask =====	
+	// ===== deleteTask =====
 	@Test // 正常系
 	void deleteTask_削除できれば例外を投げない() {
 		// given
@@ -101,67 +168,6 @@ class TaskServiceTest {
 				.hasMessage("削除対象のタスクが見つかりません。");
 	}
 
-	// ===== clampPage =====	
-	@Test // 境界値
-	void clampPage_0以下なら1に補正される() {
-		// given: 総件数25件 → 3ページ想定(PAGE_SIZE=10の場合)
-		when(taskMapper.countTotalByUser("alice")).thenReturn(25L);
-
-		// when
-		int actual = taskService.clampPage(0, "alice");
-
-		// then
-		assertThat(actual).isEqualTo(1);
-	}
-
-	@Test // 境界値
-	void clampPage_範囲外を大きく下回るなら1に補正される() {
-		// given: 総件数25件 → 3ページ想定
-		when(taskMapper.countTotalByUser("alice")).thenReturn(25L);
-
-		// when
-		int actual = taskService.clampPage(-5, "alice");
-
-		// then
-		assertThat(actual).isEqualTo(1);
-	}
-
-	@Test // 境界値
-	void clampPage_範囲内の最小値ならそのまま表示される() {
-		// given: 総件数25件 → 3ページ想定
-		when(taskMapper.countTotalByUser("alice")).thenReturn(25L);
-
-		// when
-		int actual = taskService.clampPage(1, "alice");
-
-		// then
-		assertThat(actual).isEqualTo(1);
-	}
-
-	@Test // 境界値
-	void clampPage_範囲内の最大値ならそのまま表示される() {
-		// given: 総件数25件 → 3ページ想定
-		when(taskMapper.countTotalByUser("alice")).thenReturn(25L);
-
-		// when
-		int actual = taskService.clampPage(3, "alice");
-
-		// then
-		assertThat(actual).isEqualTo(3);
-	}
-
-	@Test // 境界値
-	void clampPage_範囲外を超えたら最大ページに補正される() {
-		// given: 総件数25件 → 3ページ想定
-		when(taskMapper.countTotalByUser("alice")).thenReturn(25L);
-
-		// when
-		int actual = taskService.clampPage(4, "alice");
-
-		// then
-		assertThat(actual).isEqualTo(3);
-	}
-
 	// ===== exportTasksByPeriod =====
 	@Test // 正常系
 	void exportTasksByPeriod_正常な期間ならタスク一覧を返す() {
@@ -171,7 +177,7 @@ class TaskServiceTest {
 		List<Task> tasks = List.of(task);
 		when(taskMapper.selectTasksForExportByPeriod(
 				"alice", LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31)))
-						.thenReturn(tasks);
+				.thenReturn(tasks);
 
 		// when
 		List<Task> actual = taskService.exportTasksByPeriod("alice", LocalDate.of(2026, 1, 1),
@@ -189,8 +195,8 @@ class TaskServiceTest {
 		// when / then
 		assertThatThrownBy(() -> taskService.exportTasksByPeriod(
 				"alice", LocalDate.of(2026, 2, 1), LocalDate.of(2026, 1, 1)))
-						.isInstanceOf(BusinessException.class)
-						.hasMessage("不正な日付範囲です。");
+				.isInstanceOf(BusinessException.class)
+				.hasMessage("不正な日付範囲です。");
 
 	}
 
@@ -199,13 +205,13 @@ class TaskServiceTest {
 		// given:
 		when(taskMapper.selectTasksForExportByPeriod(
 				"alice", LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31)))
-						.thenReturn(List.of());
+				.thenReturn(List.of());
 
 		// when / then
 		assertThatThrownBy(() -> taskService.exportTasksByPeriod(
 				"alice", LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31)))
-						.isInstanceOf(BusinessException.class)
-						.hasMessage("出力件数は0件です。");
+				.isInstanceOf(BusinessException.class)
+				.hasMessage("出力件数は0件です。");
 
 	}
 
