@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -88,6 +89,30 @@ class LoginServiceTest {
 		
 		// then
 		verify(loginMapper).insertUser(any(Login.class));
+	}
+
+	@Test // 正常系
+	void registerNewUser_パスワードはハッシュ化されてから保存される() {
+		// given
+		when(loginMapper.findByUsername("newuser")).thenReturn(null);
+		when(passwordEncoder.encode("平文")).thenReturn("ハッシュ値");
+
+		// when
+		loginService.registerNewUser("newuser", "平文");
+
+		// then: insertUser に「何が」渡ったのかを捕まえて中身を確認する
+		ArgumentCaptor<Login> captor = ArgumentCaptor.forClass(Login.class);
+		verify(loginMapper).insertUser(captor.capture());
+
+		Login saved = captor.getValue();
+		assertThat(saved.getUsername()).isEqualTo("newuser");
+		assertThat(saved.getPassword())
+				.as("平文パスワードがそのまま保存されてはいけない")
+				.isEqualTo("ハッシュ値")
+				.isNotEqualTo("平文");
+
+		// encode が実際に呼ばれたことも押さえる
+		verify(passwordEncoder).encode("平文");
 	}
 
 	@Test // 異常系
