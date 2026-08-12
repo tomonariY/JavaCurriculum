@@ -1,19 +1,14 @@
 package sample.common.dao.mapper;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
-import org.springframework.test.context.ContextConfiguration;
 
-import sample.Main;
 import sample.common.dao.entity.Login;
 import sample.common.dao.entity.Task;
 import sample.common.dto.TaskRequest;
