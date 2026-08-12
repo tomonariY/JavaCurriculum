@@ -1,6 +1,7 @@
 package sample.common.dao.mapper;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,17 +16,13 @@ import org.springframework.test.context.ContextConfiguration;
 import sample.Main;
 import sample.common.dao.entity.Login;
 import sample.common.dao.entity.Task;
+import sample.common.dto.TaskRequest;
 
-@MybatisTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(classes = Main.class)
-public class TaskMapperTest {
 
-	@Autowired
-	private TaskMapper taskMapper;
+class TaskMapperTest extends AbstractMapperTest {
 
-	@Autowired
-	private LoginMapper loginMapper;
+	@Autowired private TaskMapper taskMapper;
+	@Autowired private LoginMapper loginMapper;
 
 	@BeforeEach
 	void セットアップ() {
@@ -108,10 +105,15 @@ public class TaskMapperTest {
 	void updateTaskByUser_本人なら更新できる() {
 		// given
 		Task aliceTask = aliceのタスクを1件登録する("更新前タイトル");
-		aliceTask.setTitle("更新後タイトル");
+
+		TaskRequest request = new TaskRequest();
+		request.setTitle("更新後タイトル");
+		request.setContent(aliceTask.getContent());
+		request.setStartDate(aliceTask.getStartDate());
+		request.setEndDate(aliceTask.getEndDate());
 
 		// when: alice自身として取得する
-		int updated = taskMapper.updateTaskByUser(aliceTask);
+		int updated = taskMapper.updateTaskByUser(aliceTask.getId(), request, "alice");
 
 		// then: 正しく取得できる
 		assertThat(updated).isEqualTo(1);
@@ -121,11 +123,12 @@ public class TaskMapperTest {
 	void updateTaskByUser_他人からは更新できない() {
 		// given
 		Task aliceTask = aliceのタスクを1件登録する("更新前タイトル");
-		aliceTask.setUsername("bob");
-		aliceTask.setTitle("bobが勝手に書き換えようとしたタイトル");
+
+		TaskRequest request = new TaskRequest();
+		request.setTitle("bobが勝手に書き換えようとしたタイトル");
 
 		// when: bobとして更新しようとする
-		int updated = taskMapper.updateTaskByUser(aliceTask);
+		int updated = taskMapper.updateTaskByUser(aliceTask.getId(), request, "bob");
 
 		// then: 他人のタスクなので更新されない
 		assertThat(updated).isEqualTo(0);

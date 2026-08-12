@@ -91,6 +91,36 @@ APIはすべて、未ログイン時は `401 Unauthorized`、対象タスクが�
 
 ---
 
+## 🧪 テスト方法
+
+```bash
+./gradlew test
+```
+
+テストは、開発用DB（`todo_app`）とは別の、テスト専用DB（`todo_test`）に接続して実行されます。
+実行前に `todo_test` を作成しておいてください。
+
+```bash
+createdb todo_test
+```
+
+### DB接続関係のpropertiesについて
+
+- `src/main/resources/application.properties`：開発用（`todo_app`）
+- `src/test/resources/application.properties`：テスト用（`todo_test`）。テスト実行時はこちらが優先される
+
+**注意**：`src/test/resources` の階層は厳密です。`src/test/java/resources` のように1階層でもズレると認識されず、開発用の設定がそのまま使われてしまいます。
+
+```
+src/test/
+  ├── java/
+  └── resources/
+      ├── application.properties
+      └── test-schema.sql
+```
+
+---
+
 ## 👥 作成者
 
 - tomonariY

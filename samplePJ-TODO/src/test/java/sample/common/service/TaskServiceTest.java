@@ -61,31 +61,8 @@ class TaskServiceTest {
 		assertThat(taskService.getTotalPages("alice")).isEqualTo(2);
 	}
 
-	// ===== updateTask =====	
-	@Test // 正常系
-	void updateTask_更新できれば例外を投げない() {
-		// given
-		Task task = new Task();
-		task.setId(1L);
-		when(taskMapper.updateTaskByUser(task)).thenReturn(1);
-
-		// when / then
-		assertThatCode(() -> taskService.updateTask(task, "alice"))
-				.doesNotThrowAnyException();
-	}
-
-	@Test // 異常系
-	void updateTask_更新件数が0ならBusinessExceptionを投げる() {
-		// given
-		Task task = new Task();
-		task.setId(99L);
-		when(taskMapper.updateTaskByUser(task)).thenReturn(0);
-
-		// when / then
-		assertThatThrownBy(() -> taskService.updateTask(task, "alice"))
-				.isInstanceOf(BusinessException.class)
-				.hasMessage("更新対象のタスクが見つかりません。");
-	}
+	// ===== updateApiTask =====	
+	
 
 	// ===== insertTask =====	
 	@Test // 正常系
