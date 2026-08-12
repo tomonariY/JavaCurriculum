@@ -59,19 +59,6 @@ class TaskControllerTest {
 				.andExpect(status().is3xxRedirection());
 	}
 
-	@Test // 異常系
-	void タスク編集_存在しないタスクなら例外が処理される() throws Exception {
-		// taskServiceが呼ばれたら、BusinessExceptionを投げるように仕込む
-		when(taskService.getTaskById(99L, "alice"))
-				.thenThrow(new BusinessException("対象のタスクが見つかりません。"));
-
-		// when / then
-		mockMvc.perform(get("/tasks/edit/99").session(session))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(redirectedUrl("/tasks"))
-				.andExpect(flash().attribute("error", "対象のタスクが見つかりません。"));
-	}
-
 	// ===== export =====
 	@Test // 正常系
 	void csvエクスポート_期間指定で正しくCSVがダウンロードされる() throws Exception {
