@@ -16,9 +16,6 @@ bin/
 .settings/
 .apt_generated/
 
-# VSCode
-.vscode/
-
 # IntelliJ
 .idea/
 *.iml
