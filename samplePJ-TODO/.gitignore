@@ -16,9 +16,16 @@ bin/
 .settings/
 .apt_generated/
 
+# VSCode
+.vscode/
+
 # IntelliJ
 .idea/
 *.iml
+
+# application.properties(ユーザー名,パスワード)
+src/main/resources/application.properties
+src/test/resources/application.properties
 
 # OS
 .DS_Store
