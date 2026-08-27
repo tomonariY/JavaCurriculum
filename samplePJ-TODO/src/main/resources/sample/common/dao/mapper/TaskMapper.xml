@@ -3,8 +3,7 @@
 
 <mapper namespace="sample.common.dao.mapper.TaskMapper">
 
-	<select id="selectPageByUser"
-		resultType="sample.common.dao.entity.Task">
+	<select id="selectPageByUser" resultType="sample.common.dao.entity.Task">
 		SELECT * FROM tasks
 		WHERE username = #{username}
 		ORDER BY id
@@ -16,8 +15,7 @@
 		SELECT COUNT(*) FROM tasks WHERE username = #{username}
 	</select>
 
-	<select id="findByIdAndUser"
-		resultType="sample.common.dao.entity.Task">
+	<select id="findByIdAndUser" resultType="sample.common.dao.entity.Task">
 		SELECT * FROM tasks
 		WHERE id = #{id} AND username = #{username}
 	</select>
@@ -56,26 +54,21 @@
 	</delete>
 
 
-	<select id="selectTasksForExportByPeriod"
-		resultType="sample.common.dao.entity.Task">
+	<select id="selectTasksForExportByPeriod" resultType="sample.common.dao.entity.Task">
 		SELECT * FROM tasks
 		WHERE username = #{username}
 		AND start_date &gt;= #{startDate}
 		AND end_date &lt;= #{endDate}
 	</select>
 
-	<select id="selectTaskForExportById"
-		resultType="sample.common.dao.entity.Task">
+	<select id="selectTaskForExportById" resultType="sample.common.dao.entity.Task">
 		SELECT * FROM tasks
 		WHERE username = #{username}
 		AND id = #{id}
 	</select>
-	
 
 	<!-- 旧更新用SQL -->
-	<insert id="insertTask"
-		parameterType="sample.common.dao.entity.Task" useGeneratedKeys="true"
-		keyProperty="id">
+	<insert id="insertTask" parameterType="sample.common.dao.entity.Task" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tasks (
 		title,
 		content,
@@ -90,7 +83,7 @@
 		#{username}
 		)
 	</insert>
-	
+
 	<update id="updateTask">
 		UPDATE tasks
 		SET
