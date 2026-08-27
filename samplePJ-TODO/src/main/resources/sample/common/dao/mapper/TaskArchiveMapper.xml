@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sample.common.dao.mapper.TaskArchiveMapper">
+
+    <select id="selectArchiveTargets" resultType="sample.common.dao.entity.Task">
+		SELECT * FROM tasks
+		WHERE status = '完了'
+		AND end_date &lt;= #{thresholdDate}
+    </select>
+
+    <insert id="insertArchive">
+        INSERT INTO tasks_archive (
+            id, username, title, content, name, start_date, end_date,
+            status, created_at, updated_at
+        ) VALUES (
+            #{task.id}, #{task.username}, #{task.title}, #{task.content}, #{task.name},
+            #{task.startDate}, #{task.endDate}, #{task.status},
+            #{task.createdAt}, #{task.updatedAt}
+        )
+    </insert>
+
+    <delete id="deleteById">
+        DELETE FROM tasks WHERE id = #{id}
+    </delete>
+
+</mapper>
