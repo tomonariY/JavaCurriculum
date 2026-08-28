@@ -26,13 +26,15 @@
 		content,
 		start_date,
 		end_date,
-		username
+		username,
+		status
 		) VALUES (
 		#{request.title},
 		#{request.content},
 		#{request.startDate},
 		#{request.endDate},
-		#{username}
+		#{username},
+		#{status}
 		)
 	</insert>
 
@@ -43,7 +45,8 @@
 		content = #{request.content},
 		start_date = #{request.startDate},
 		end_date = #{request.endDate},
-		updated_at = NOW()
+		updated_at = NOW(),
+		status = #{request.status}
 		WHERE id = #{id} AND username = #{username}
 	</update>
 

@@ -124,7 +124,7 @@ public class TaskService {
 	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	public byte[] convertTasksToCsv(List<Task> tasks) {
-		String[] header = { "ID", "ユーザー名", "タイトル", "内容", "登録者", "開始日", "終了日", "作成日時", "更新日" };
+		String[] header = { "ID", "ユーザー名", "タイトル", "内容",  "開始日", "終了日", "作成日時", "更新日" };
 
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			// Excelで開いたときに文字化けしないよう、UTF-8のBOM(先頭マーカー)を付与する
@@ -140,7 +140,6 @@ public class TaskService {
 							task.getUsername(),
 							task.getTitle(),
 							task.getContent(),
-							task.getName(),
 							String.valueOf(task.getStartDate()),
 							String.valueOf(task.getEndDate()),
 							formatDateTime(task.getCreatedAt()),
