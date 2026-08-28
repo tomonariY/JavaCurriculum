@@ -9,7 +9,6 @@ public class Task {
 	private String username;
 	private String title;
 	private String content;
-	private String name;
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private String status;
@@ -50,15 +49,6 @@ public class Task {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	// name:登録者名
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	// startDate:開始日

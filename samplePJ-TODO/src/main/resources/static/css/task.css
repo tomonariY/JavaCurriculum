@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /* ==========================================================================
-   【改修】PC1画面に収めるための全体コンテナ圧縮
+   PC1画面に収めるための全体コンテナ圧縮
    ========================================================================== */
 .container {
 	max-width: 1250px;
@@ -304,6 +304,27 @@ a.page-link:hover {
 .text-muted {
 	color: var(--husky-gray);
 	font-size: 11px;
+}
+
+.status-done {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 2px 10px;
+    border: 1px solid var(--husky-blue);
+    border-radius: 4px;
+    background-color: rgba(52, 152, 219, 0.1);
+    color: var(--husky-blue);
+    line-height: 1.4;
+}
+
+.status-pending {
+    display: inline-block;
+    padding: 2px 10px;
+    border: 1px solid #e74c3c;
+    border-radius: 4px;
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    line-height: 1.4;
 }
 
 /* ==========================================================================
