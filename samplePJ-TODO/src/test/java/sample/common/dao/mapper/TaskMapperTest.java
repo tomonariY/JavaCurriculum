@@ -13,11 +13,12 @@ import sample.common.dao.entity.Login;
 import sample.common.dao.entity.Task;
 import sample.common.dto.TaskRequest;
 
-
 class TaskMapperTest extends AbstractMapperTest {
 
-	@Autowired private TaskMapper taskMapper;
-	@Autowired private LoginMapper loginMapper;
+	@Autowired
+	private TaskMapper taskMapper;
+	@Autowired
+	private LoginMapper loginMapper;
 
 	@BeforeEach
 	void セットアップ() {
@@ -106,6 +107,7 @@ class TaskMapperTest extends AbstractMapperTest {
 		request.setContent(aliceTask.getContent());
 		request.setStartDate(aliceTask.getStartDate());
 		request.setEndDate(aliceTask.getEndDate());
+		request.setStatus(aliceTask.getStatus());
 
 		// when: alice自身として取得する
 		int updated = taskMapper.updateTaskByUser(aliceTask.getId(), request, "alice");
@@ -208,7 +210,7 @@ class TaskMapperTest extends AbstractMapperTest {
 		Task result = taskMapper.findByIdAndUser(aliceTask.getId(), "alice");
 		assertThat(result).isNotNull();
 		assertThat(result.getTitle()).isEqualTo("新規タスク");
-
+		assertThat(result.getStatus()).isEqualTo("未完了");
 	}
 
 	// ===== selectTasksForExportByPeriod =====
@@ -221,7 +223,7 @@ class TaskMapperTest extends AbstractMapperTest {
 		aliceのタスクを1件登録する("期間外タスク",
 				LocalDate.of(2025, 1, 1), LocalDate.of(2025, 1, 5));
 
-		タスクを1件登録する("bob","bobのタスク",
+		タスクを1件登録する("bob", "bobのタスク",
 				LocalDate.of(2026, 1, 10), LocalDate.of(2026, 1, 20));
 
 		// when: aliceとして 2026/01/01〜2026/01/31 の範囲で取得する
@@ -233,36 +235,36 @@ class TaskMapperTest extends AbstractMapperTest {
 		assertThat(result.get(0).getTitle()).isEqualTo("期間内タスク");
 
 	}
-	
+
 	@Test // 境界値
 	void selectTasksForExportByPeriod_期間の端の日付ちょうどのタスクが含まれるか() {
 		// given: 期間の端の日付ちょうどのタスク
 		aliceのタスクを1件登録する("期間内タスク",
 				LocalDate.of(2026, 1, 10), LocalDate.of(2026, 1, 10));
-		
+
 		// when: aliceとして 2026/01/10〜2026/01/10 の範囲で取得する
 		List<Task> result = taskMapper.selectTasksForExportByPeriod(
 				"alice", LocalDate.of(2026, 1, 10), LocalDate.of(2026, 1, 10));
-		
+
 		// then: 期間内・alice本人のタスクだけが1件返る
 		assertThat(result).hasSize(1);
 		assertThat(result.get(0).getTitle()).isEqualTo("期間内タスク");
-		
+
 	}
-	
+
 	@Test // 境界値
 	void selectTasksForExportByPeriod_範囲から1日はみ出すタスクは含まれない() {
 		// given: 終了日が指定範囲を1日超えているタスク
 		aliceのタスクを1件登録する("期間外タスク",
 				LocalDate.of(2026, 1, 10), LocalDate.of(2026, 2, 1));
-		
+
 		// when: aliceとして 2026/01/01〜2026/01/31 の範囲で取得する
 		List<Task> result = taskMapper.selectTasksForExportByPeriod(
 				"alice", LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 31));
-		
+
 		// then: 期間からはみ出しているので対象外(0件)
 		assertThat(result).isEmpty();
-		
+
 	}
 
 	// ===== selectTaskForExportById =====
@@ -287,7 +289,7 @@ class TaskMapperTest extends AbstractMapperTest {
 
 		// when: bobとしてaliceのタスクIDを指定して取得しようとする
 		Task result = taskMapper.selectTaskForExportById("bob", aliceTask.getId());
-		
+
 		// then: 他人のタスクなので取得できない(nullが返る)
 		assertThat(result).isNull();
 
@@ -297,7 +299,7 @@ class TaskMapperTest extends AbstractMapperTest {
 	void selectTaskForExportById_存在しないIDなら取得できない() {
 		// when: 存在しないaliceのIDを指定して取得しようとする
 		Task result = taskMapper.selectTaskForExportById("alice", 999L);
-		
+
 		// then: 期間内・alice本人のタスクだけが1件返る
 		assertThat(result).isNull();
 

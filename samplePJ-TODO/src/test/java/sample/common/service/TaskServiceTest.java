@@ -146,6 +146,20 @@ class TaskServiceTest {
 		verify(taskMapper).insertTask(task);
 	}
 
+	@Test // 正常系
+	void insertTask_引数のstatusがデフォルトで未完了になっている() {
+		// given
+		Task task = new Task();
+		task.setUsername("dummy");
+
+		// when
+		taskService.insertTask(task, "alice");
+
+		// then
+		assertThat(task.getStatus()).isNull();
+		verify(taskMapper).insertTask(task);
+	}
+
 	// ===== deleteTask =====
 	@Test // 正常系
 	void deleteTask_削除できれば例外を投げない() {
@@ -252,7 +266,6 @@ class TaskServiceTest {
 		task.setUsername("alice");
 		task.setTitle("タスクA");
 		task.setContent("内容A");
-		task.setName("登録者A");
 		task.setStartDate(LocalDate.of(2026, 1, 1));
 		task.setEndDate(LocalDate.of(2026, 1, 31));
 		List<Task> tasks = List.of(task);
